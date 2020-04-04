@@ -419,28 +419,46 @@ function readyGlobalPaymentsSecure() {
 	}
 }
 
-var script = document.createElement('script');
-script.type = 'text/javascript';
 {% if (checkout == 'hpp') %}
-script.src = 'catalog/view/javascript/globalpayments/rxp-hpp.js';
+if (typeof RealexHpp === 'undefined') {
+	var script = document.createElement('script');
+	script.type = 'text/javascript';
+	script.src = 'catalog/view/javascript/globalpayments/rxp-hpp.js';
+	script.async = false;
+	script.onload = readyGlobalPayments();
+	
+	var globalpayments_form = document.querySelector('#globalpayments_form');
+	globalpayments_form.appendChild(script);
+} else {
+	setupGlobalPayments();
+}
 {% endif %}
 {% if (checkout == 'api') %}
-script.src = 'catalog/view/javascript/globalpayments/rxp-remote.js';
+if (typeof RealexRemote === 'undefined') {
+	var script = document.createElement('script');
+	script.type = 'text/javascript';
+	script.src = 'catalog/view/javascript/globalpayments/rxp-remote.js';
+	script.async = false;
+	script.onload = readyGlobalPayments();
+	
+	var globalpayments_form = document.querySelector('#globalpayments_form');
+	globalpayments_form.appendChild(script);
+} else {
+	setupGlobalPayments();
+}
 {% endif %}
-script.async = false;
-script.onload = readyGlobalPayments();
-	
-var globalpayments_form = document.querySelector('#globalpayments_form');
-globalpayments_form.appendChild(script);
-
 {% if ((checkout == 'api') and secure_status) %}
-var script = document.createElement('script');
-script.type = 'text/javascript';
-script.src = 'catalog/view/javascript/globalpayments/globalpayments-3ds.js';
-script.async = false;
-script.onload = readyGlobalPaymentsSecure();
+if (typeof GlobalPayments === 'undefined') {	
+	var script = document.createElement('script');
+	script.type = 'text/javascript';
+	script.src = 'catalog/view/javascript/globalpayments/globalpayments-3ds.js';
+	script.async = false;
+	script.onload = readyGlobalPaymentsSecure();
 	
-globalpayments_form.appendChild(script);
+	globalpayments_form.appendChild(script);
+} else {
+	setupGlobalPaymentsSecure2();
+}
 {% endif %}
 
 </script>
