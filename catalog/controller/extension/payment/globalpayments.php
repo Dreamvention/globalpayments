@@ -18,13 +18,13 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 			
 		$config_setting = $_config->get('globalpayments_setting');
 		
-		$setting = array_replace_recursive((array)$config_setting, (array)$this->config->get('payment_globalpayments_setting'));
+		$setting = array_replace_recursive((array)$config_setting, (array)$this->config->get('globalpayments_setting'));
 						
-		$data['merchant_id'] = $this->config->get('payment_globalpayments_merchant_id');
-		$data['account_id'] = $this->config->get('payment_globalpayments_account_id');
-		$data['secret'] = $this->config->get('payment_globalpayments_secret');
-		$data['checkout'] = $this->config->get('payment_globalpayments_checkout');
-		$data['environment'] = $this->config->get('payment_globalpayments_environment');
+		$data['merchant_id'] = $this->config->get('globalpayments_merchant_id');
+		$data['account_id'] = $this->config->get('globalpayments_account_id');
+		$data['secret'] = $this->config->get('globalpayments_secret');
+		$data['checkout'] = $this->config->get('globalpayments_checkout');
+		$data['environment'] = $this->config->get('globalpayments_environment');
 		$data['service'] = $setting['service'][$data['checkout']][$data['environment']];
 		$data['hpp_url'] = $this->url->link('extension/payment/globalpayments/hpp');
 		$data['api_url'] = $this->url->link('extension/payment/globalpayments/api');
@@ -35,7 +35,7 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 		$data['api_secure_1_authorization_url'] = $this->url->link('extension/payment/globalpayments/apiSecure1Authorization');
 		
 		if ($data['checkout'] == 'hpp') {
-			require_once DIR_SYSTEM .'library/globalpayments/GlobalPayments.php';
+			require_once DIR_SYSTEM . 'library/globalpayments/GlobalPayments.php';
 
 			$servicesConfig = new GlobalPayments\Api\ServicesConfig();
 		
@@ -126,6 +126,13 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 			$data['form_width'] = $setting['form_width'][$data['form_size']];
 			$data['secure_status'] = $setting['checkout']['api']['secure_status'];
 			
+			$data['entry_card_number'] = $this->language->get('entry_card_number');
+			$data['entry_card_holder_name'] = $this->language->get('entry_card_holder_name');
+			$data['entry_card_expire_date'] = $this->language->get('entry_card_expire_date');
+			$data['entry_card_cvn'] = $this->language->get('entry_card_cvn');
+		
+			$data['button_pay'] = $this->language->get('button_pay');
+			
 			$data['months'] = array();
 
 			for ($i = 1; $i <= 12; $i++) {
@@ -166,17 +173,17 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 			
 			$config_setting = $_config->get('globalpayments_setting');
 		
-			$setting = array_replace_recursive((array)$config_setting, (array)$this->config->get('payment_globalpayments_setting'));
+			$setting = array_replace_recursive((array)$config_setting, (array)$this->config->get('globalpayments_setting'));
 						
-			$merchant_id = $this->config->get('payment_globalpayments_merchant_id');
-			$account_id = $this->config->get('payment_globalpayments_account_id');
-			$secret = $this->config->get('payment_globalpayments_secret');
-			$checkout = $this->config->get('payment_globalpayments_checkout');
-			$environment = $this->config->get('payment_globalpayments_environment');
-			$settlement_method = $this->config->get('payment_globalpayments_settlement_method');
+			$merchant_id = $this->config->get('globalpayments_merchant_id');
+			$account_id = $this->config->get('globalpayments_account_id');
+			$secret = $this->config->get('globalpayments_secret');
+			$checkout = $this->config->get('globalpayments_checkout');
+			$environment = $this->config->get('globalpayments_environment');
+			$settlement_method = $this->config->get('globalpayments_settlement_method');
 			$service = $setting['service'][$checkout][$environment];
 						
-			require_once DIR_SYSTEM .'library/globalpayments/GlobalPayments.php';
+			require_once DIR_SYSTEM . 'library/globalpayments/GlobalPayments.php';
 
 			$servicesConfig = new GlobalPayments\Api\ServicesConfig();
 		
@@ -258,17 +265,17 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 			
 			$config_setting = $_config->get('globalpayments_setting');
 		
-			$setting = array_replace_recursive((array)$config_setting, (array)$this->config->get('payment_globalpayments_setting'));
+			$setting = array_replace_recursive((array)$config_setting, (array)$this->config->get('globalpayments_setting'));
 						
-			$merchant_id = $this->config->get('payment_globalpayments_merchant_id');
-			$account_id = $this->config->get('payment_globalpayments_account_id');
-			$secret = $this->config->get('payment_globalpayments_secret');
-			$checkout = $this->config->get('payment_globalpayments_checkout');
-			$environment = $this->config->get('payment_globalpayments_environment');
-			$settlement_method = $this->config->get('payment_globalpayments_settlement_method');
+			$merchant_id = $this->config->get('globalpayments_merchant_id');
+			$account_id = $this->config->get('globalpayments_account_id');
+			$secret = $this->config->get('globalpayments_secret');
+			$checkout = $this->config->get('globalpayments_checkout');
+			$environment = $this->config->get('globalpayments_environment');
+			$settlement_method = $this->config->get('globalpayments_settlement_method');
 			$service = $setting['service'][$checkout][$environment];
 						
-			require_once DIR_SYSTEM .'library/globalpayments/GlobalPayments.php';
+			require_once DIR_SYSTEM . 'library/globalpayments/GlobalPayments.php';
 
 			$servicesConfig = new GlobalPayments\Api\ServicesConfig();
 		
@@ -353,14 +360,14 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 		$output_data = array();
 			
 		if (isset($input_data['card']['number'])) {
-			$merchant_id = $this->config->get('payment_globalpayments_merchant_id');
-			$account_id = $this->config->get('payment_globalpayments_account_id');
-			$secret = $this->config->get('payment_globalpayments_secret');
-			$checkout = $this->config->get('payment_globalpayments_checkout');
-			$environment = $this->config->get('payment_globalpayments_environment');
-			$settlement_method = $this->config->get('payment_globalpayments_settlement_method');
+			$merchant_id = $this->config->get('globalpayments_merchant_id');
+			$account_id = $this->config->get('globalpayments_account_id');
+			$secret = $this->config->get('globalpayments_secret');
+			$checkout = $this->config->get('globalpayments_checkout');
+			$environment = $this->config->get('globalpayments_environment');
+			$settlement_method = $this->config->get('globalpayments_settlement_method');
 			
-			require_once DIR_SYSTEM .'library/globalpayments/GlobalPayments.php';
+			require_once DIR_SYSTEM . 'library/globalpayments/GlobalPayments.php';
 
 			$servicesConfig = new GlobalPayments\Api\ServicesConfig();
 		
@@ -435,16 +442,16 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 			
 			$config_setting = $_config->get('globalpayments_setting');
 		
-			$setting = array_replace_recursive((array)$config_setting, (array)$this->config->get('payment_globalpayments_setting'));
+			$setting = array_replace_recursive((array)$config_setting, (array)$this->config->get('globalpayments_setting'));
 			
-			$merchant_id = $this->config->get('payment_globalpayments_merchant_id');
-			$account_id = $this->config->get('payment_globalpayments_account_id');
-			$secret = $this->config->get('payment_globalpayments_secret');
-			$checkout = $this->config->get('payment_globalpayments_checkout');
-			$environment = $this->config->get('payment_globalpayments_environment');
-			$settlement_method = $this->config->get('payment_globalpayments_settlement_method');
+			$merchant_id = $this->config->get('globalpayments_merchant_id');
+			$account_id = $this->config->get('globalpayments_account_id');
+			$secret = $this->config->get('globalpayments_secret');
+			$checkout = $this->config->get('globalpayments_checkout');
+			$environment = $this->config->get('globalpayments_environment');
+			$settlement_method = $this->config->get('globalpayments_settlement_method');
 			
-			require_once DIR_SYSTEM .'library/globalpayments/GlobalPayments.php';
+			require_once DIR_SYSTEM . 'library/globalpayments/GlobalPayments.php';
 
 			$servicesConfig = new GlobalPayments\Api\ServicesConfig();
 		
@@ -618,19 +625,19 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 			
 			$config_setting = $_config->get('globalpayments_setting');
 		
-			$setting = array_replace_recursive((array)$config_setting, (array)$this->config->get('payment_globalpayments_setting'));
+			$setting = array_replace_recursive((array)$config_setting, (array)$this->config->get('globalpayments_setting'));
 						
-			$merchant_id = $this->config->get('payment_globalpayments_merchant_id');
-			$account_id = $this->config->get('payment_globalpayments_account_id');
-			$secret = $this->config->get('payment_globalpayments_secret');
-			$checkout = $this->config->get('payment_globalpayments_checkout');
-			$environment = $this->config->get('payment_globalpayments_environment');
-			$settlement_method = $this->config->get('payment_globalpayments_settlement_method');
+			$merchant_id = $this->config->get('globalpayments_merchant_id');
+			$account_id = $this->config->get('globalpayments_account_id');
+			$secret = $this->config->get('globalpayments_secret');
+			$checkout = $this->config->get('globalpayments_checkout');
+			$environment = $this->config->get('globalpayments_environment');
+			$settlement_method = $this->config->get('globalpayments_settlement_method');
 			$service = $setting['service'][$checkout][$environment];
 			
 			$authentication_data = json_decode(htmlspecialchars_decode($this->request->post['authenticationData']), true);
 			
-			require_once DIR_SYSTEM .'library/globalpayments/GlobalPayments.php';
+			require_once DIR_SYSTEM . 'library/globalpayments/GlobalPayments.php';
 										
 			if ($authentication_data['status'] !== 'CHALLENGE_REQUIRED') {
 				$secure_scenario_code = strtolower($authentication_data['status']);
@@ -807,17 +814,17 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 			
 			$config_setting = $_config->get('globalpayments_setting');
 		
-			$setting = array_replace_recursive((array)$config_setting, (array)$this->config->get('payment_globalpayments_setting'));
+			$setting = array_replace_recursive((array)$config_setting, (array)$this->config->get('globalpayments_setting'));
 						
-			$merchant_id = $this->config->get('payment_globalpayments_merchant_id');
-			$account_id = $this->config->get('payment_globalpayments_account_id');
-			$secret = $this->config->get('payment_globalpayments_secret');
-			$checkout = $this->config->get('payment_globalpayments_checkout');
-			$environment = $this->config->get('payment_globalpayments_environment');
-			$settlement_method = $this->config->get('payment_globalpayments_settlement_method');
+			$merchant_id = $this->config->get('globalpayments_merchant_id');
+			$account_id = $this->config->get('globalpayments_account_id');
+			$secret = $this->config->get('globalpayments_secret');
+			$checkout = $this->config->get('globalpayments_checkout');
+			$environment = $this->config->get('globalpayments_environment');
+			$settlement_method = $this->config->get('globalpayments_settlement_method');
 			$service = $setting['service'][$checkout][$environment];
 			
-			require_once DIR_SYSTEM .'library/globalpayments/GlobalPayments.php';
+			require_once DIR_SYSTEM . 'library/globalpayments/GlobalPayments.php';
 
 			$servicesConfig = new GlobalPayments\Api\ServicesConfig();
 		
@@ -956,17 +963,17 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 			
 			$config_setting = $_config->get('globalpayments_setting');
 		
-			$setting = array_replace_recursive((array)$config_setting, (array)$this->config->get('payment_globalpayments_setting'));
+			$setting = array_replace_recursive((array)$config_setting, (array)$this->config->get('globalpayments_setting'));
 						
-			$merchant_id = $this->config->get('payment_globalpayments_merchant_id');
-			$account_id = $this->config->get('payment_globalpayments_account_id');
-			$secret = $this->config->get('payment_globalpayments_secret');
-			$checkout = $this->config->get('payment_globalpayments_checkout');
-			$environment = $this->config->get('payment_globalpayments_environment');
-			$settlement_method = $this->config->get('payment_globalpayments_settlement_method');
+			$merchant_id = $this->config->get('globalpayments_merchant_id');
+			$account_id = $this->config->get('globalpayments_account_id');
+			$secret = $this->config->get('globalpayments_secret');
+			$checkout = $this->config->get('globalpayments_checkout');
+			$environment = $this->config->get('globalpayments_environment');
+			$settlement_method = $this->config->get('globalpayments_settlement_method');
 			$service = $setting['service'][$checkout][$environment];
 			
-			require_once DIR_SYSTEM .'library/globalpayments/GlobalPayments.php';
+			require_once DIR_SYSTEM . 'library/globalpayments/GlobalPayments.php';
 
 			$servicesConfig = new GlobalPayments\Api\ServicesConfig();
 		
@@ -1024,14 +1031,14 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 			
 			$config_setting = $_config->get('globalpayments_setting');
 		
-			$setting = array_replace_recursive((array)$config_setting, (array)$this->config->get('payment_globalpayments_setting'));
+			$setting = array_replace_recursive((array)$config_setting, (array)$this->config->get('globalpayments_setting'));
 						
-			$merchant_id = $this->config->get('payment_globalpayments_merchant_id');
-			$account_id = $this->config->get('payment_globalpayments_account_id');
-			$secret = $this->config->get('payment_globalpayments_secret');
-			$checkout = $this->config->get('payment_globalpayments_checkout');
-			$environment = $this->config->get('payment_globalpayments_environment');
-			$settlement_method = $this->config->get('payment_globalpayments_settlement_method');
+			$merchant_id = $this->config->get('globalpayments_merchant_id');
+			$account_id = $this->config->get('globalpayments_account_id');
+			$secret = $this->config->get('globalpayments_secret');
+			$checkout = $this->config->get('globalpayments_checkout');
+			$environment = $this->config->get('globalpayments_environment');
+			$settlement_method = $this->config->get('globalpayments_settlement_method');
 			$service = $setting['service'][$checkout][$environment];
 			
 			$authentication_data = json_decode(htmlspecialchars_decode($this->request->post['authenticationData']), true);
@@ -1059,7 +1066,7 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 			}
 			
 			if (!$this->error) {
-				require_once DIR_SYSTEM .'library/globalpayments/GlobalPayments.php';
+				require_once DIR_SYSTEM . 'library/globalpayments/GlobalPayments.php';
 				
 				$servicesConfig = new GlobalPayments\Api\ServicesConfig();
 		

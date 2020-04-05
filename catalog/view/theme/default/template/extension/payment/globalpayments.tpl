@@ -4,16 +4,16 @@
 	position: relative;
 }
 
-{% if (checkout == 'api') %}
+<?php if ($checkout == 'api') { ?>
 #globalpayments_api {
-	text-align: {{ form_align }};
+	text-align: <?php echo $form_align; ?>;
 }
 
 #globalpayments_api_form {
-	{% if form_width %}
+	<?php if ($form_width) { ?>
 	display: inline-block;
-	width: {{ form_width }};
-	{% endif %}
+	width: <?php echo $form_width; ?>;
+	<?php } ?>
 	text-align: left;
 }
 
@@ -22,7 +22,7 @@
 		width: 100%;
 	}
 }
-{% endif %}
+<?php } ?>
 
 #globalpayments_form .lds-spinner {
 	display: inline-block;
@@ -112,8 +112,8 @@
 	animation-delay: 0s;
 }
 
-iframe textarea {
-	width: 200px;
+#globalpayments_form .hidden {
+	display: none;
 }
 
 @keyframes lds-spinner {
@@ -127,43 +127,43 @@ iframe textarea {
 
 </style>
 <div id="globalpayments_form">
-	{% if (checkout == 'hpp') %}
+	<?php if ($checkout == 'hpp') { ?>
 	<div id="globalpayments_hpp">
 		<div class="buttons">
 			<div class="pull-right">
-				<input type="button" value="{{ button_pay }}" id="globalpayments_hpp_button" class="btn btn-primary" />
+				<input type="button" value="<?php echo $button_pay; ?>" id="globalpayments_hpp_button" class="btn btn-primary" />
 			</div>
 		</div>
 	</div>
-	{% endif %}
-	{% if (checkout == 'api') %}
+	<?php } ?>
+	<?php if ($checkout == 'api') { ?>
 	<div id="globalpayments_api">
 		<form id="globalpayments_api_form">
 			<div class="form-group required">
-				<label class="control-label" for="input_card_number">{{ entry_card_number }}</label>
+				<label class="control-label" for="input_card_number"><?php echo $entry_card_number; ?></label>
 				<input type="tel" name="card_number" placeholder="#### #### #### ####" id="input_card_number" class="form-control" />
 			</div>
 			<div class="form-group required">
-				<label class="control-label" for="input_card_holder_name">{{ entry_card_holder_name }}</label>
-				<input type="text" name="card_holder_name" placeholder="{{ entry_card_holder_name }}" id="input_card_holder_name" class="form-control" />
+				<label class="control-label" for="input_card_holder_name"><?php echo $entry_card_holder_name; ?></label>
+				<input type="text" name="card_holder_name" placeholder="<?php echo $entry_card_holder_name; ?>" id="input_card_holder_name" class="form-control" />
 			</div>
 			<div class="row">
 				<div class="col-sm-8">
 					<div class="form-group required">
-						<label class="control-label" for="input_card_expire_date">{{ entry_card_expire_date }}</label>
+						<label class="control-label" for="input_card_expire_date"><?php echo $entry_card_expire_date; ?></label>
 						<div class="row">
 							<div class="col-sm-7">
 								<select name="card_expire_date_month" id="input_card_expire_date_month" class="form-control">
-									{% for month in months %}
-									<option value="{{ month['value'] }}">{{ month['text'] }}</option>
-									{% endfor %}
+									<?php foreach ($months as $month) { ?>
+									<option value="<?php echo $month['value']; ?>"><?php echo $month['text']; ?></option>
+									<?php } ?>
 								</select>
 							</div>
 							<div class="col-sm-5">
 								<select name="card_expire_date_year" id="input_card_expire_date_year" class="form-control">
-									{% for year in year_expire %}
-									<option value="{{ year['value'] }}">{{ year['text'] }}</option>
-									{% endfor %}
+									<?php foreach ($year_expire as $year) { ?>
+									<option value="<?php echo $year['value']; ?>"><?php echo $year['text']; ?></option>
+									<?php } ?>
 								</select>
 							</div>
 						</div>
@@ -171,32 +171,32 @@ iframe textarea {
 				</div>
 				<div class="col-sm-4">
 					<div class="form-group required">
-						<label class="control-label" for="input_card_cvn">{{ entry_card_cvn }}</label>
+						<label class="control-label" for="input_card_cvn"><?php echo $entry_card_cvn; ?></label>
 						<input type="tel" name="card_cvn" name="card_security_code" placeholder="###" id="input_card_cvn" class="form-control" />
 					</div>
 				</div>
 			</div>
 			<div class="buttons">
 				<div class="pull-right">
-					<input type="button" value="{{ button_pay }}" id="globalpayments_api_button" data-loading-text="{{ text_loading }}" class="btn btn-primary" />
-					<input type="button" value="{{ button_pay }}" id="globalpayments_api_secure_button" data-loading-text="{{ text_loading }}" class="btn btn-default hidden" />
+					<input type="button" value="<?php echo $button_pay; ?>" id="globalpayments_api_button" data-loading-text="<?php echo $text_loading; ?>" class="btn btn-primary" />
+					<input type="button" value="<?php echo $button_pay; ?>" id="globalpayments_api_secure_button" data-loading-text="<?php echo $text_loading; ?>" class="btn btn-default hidden" />
 				</div>
 			</div>
 		</form>
 	</div>
-	{% endif %}
+	<?php } ?>
 	<div class="lds-spinner hidden"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
 </div>
 <script>
 
 function setupGlobalPayments() {
-	{% if (checkout == 'hpp') %}
-	hpp = {{ hpp }};
+	<?php if ($checkout == 'hpp') { ?>
+	hpp = <?php echo $hpp; ?>;
 	
-	RealexHpp.setHppUrl('{{ service['url'] }}');
-	RealexHpp.lightbox.init('globalpayments_hpp_button', '{{ hpp_url }}', hpp); 
-	{% endif %}
-	{% if (checkout == 'api') %}	
+	RealexHpp.setHppUrl('<?php echo $service['url']; ?>');
+	RealexHpp.lightbox.init('globalpayments_hpp_button', '<?php echo $hpp_url; ?>', hpp); 
+	<?php } ?>
+	<?php if ($checkout == 'api') { ?>
 	$(document).on('click', '#globalpayments_api_button', function(event) {				
 		event.preventDefault();
 		
@@ -218,36 +218,36 @@ function setupGlobalPayments() {
 			var error = new Array();
 			
 			if (cardNumberCheck == false) {
-				error['card_number'] = '{{ error_card_number }}';
+				error['card_number'] = '<?php echo $error_card_number; ?>';
 			}
 			
 			if (cardHolderNameCheck == false) {
-				error['card_holder_name'] = '{{ error_card_holder_name }}';
+				error['card_holder_name'] = '<?php echo $error_card_holder_name; ?>';
 			}
 			
 			if (cardExpireDateFormatCheck == false) {
-				error['card_expire_date_month'] = '{{ error_card_expire_date_format }}';
-				error['card_expire_date_year'] = '{{ error_card_expire_date_format }}';
+				error['card_expire_date_month'] = '<?php echo $error_card_expire_date_format; ?>';
+				error['card_expire_date_year'] = '<?php echo $error_card_expire_date_format; ?>';
 			}
 			
 			if (cardExpireDatePastCheck == false) {
-				error['card_expire_date_month'] = '{{ error_card_expire_date_past }}';
-				error['card_expire_date_year'] = '{{ error_card_expire_date_past }}';
+				error['card_expire_date_month'] = '<?php echo $error_card_expire_date_past; ?>';
+				error['card_expire_date_year'] = '<?php echo $error_card_expire_date_past; ?>';
 			}
 			
 			if (cardCVNCheck == false) {
-				error['card_cvn'] = '{{ error_card_cvn }}';
+				error['card_cvn'] = '<?php echo $error_card_cvn; ?>';
 			}
 			
 			showGlobalPaymentsAlert({error: error});
 		} else {
-			{% if (secure_status) %}
+			<?php if ($secure_status) { ?>
 			$('#globalpayments_api_secure_button').trigger('click');
-			{% else %}
+			<?php } else { ?>
 			showGlobalPaymentsAlert({wait: true});
 			
 			$.ajax({
-				url: '{{ api_url }}',
+				url: '<?php echo $api_url; ?>',
 				type: 'post',
 				data: $('#globalpayments_api_form :input'),
 				dataType: 'json',
@@ -263,13 +263,13 @@ function setupGlobalPayments() {
 					console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
 				}
 			});
-			{% endif %}
+			<?php } ?>
 		}
 	});		
-	{% endif %}
+	<?php } ?>
 }
 
-{% if ((checkout == 'api') and secure_status) %}
+<?php if (($checkout == 'api') && $secure_status) { ?>
 function setupGlobalPaymentsSecure2() {	
 	const {checkVersion, getBrowserData, initiateAuthentication} = GlobalPayments.ThreeDSecure;
 
@@ -277,7 +277,7 @@ function setupGlobalPaymentsSecure2() {
 		event.preventDefault();
 		
 		try {
-			checkVersionData = await checkVersion('{{ api_secure_2_check_version_url }}', {
+			checkVersionData = await checkVersion('<?php echo $api_secure_2_check_version_url; ?>', {
 				card: {
 					number: $('#input_card_number').val()
 				}
@@ -297,7 +297,7 @@ function setupGlobalPaymentsSecure2() {
 		}
 		
 		try {
-			authenticationData = await initiateAuthentication('{{ api_secure_2_initiate_authentication_url }}', {
+			authenticationData = await initiateAuthentication('<?php echo $api_secure_2_initiate_authentication_url; ?>', {
 				serverTransactionId: checkVersionData.serverTransactionId,
 				methodUrlComplete: true,
 				card: {
@@ -316,7 +316,7 @@ function setupGlobalPaymentsSecure2() {
 			showGlobalPaymentsAlert({wait: true});
 			
 			$.ajax({
-				url: '{{ api_secure_2_authorization_url }}',
+				url: '<?php echo $api_secure_2_authorization_url; ?>',
 				type: 'post',
 				data: $('#globalpayments_api_form').serialize() + '&authenticationData=' + JSON.stringify(authenticationData),
 				dataType: 'json',
@@ -346,7 +346,7 @@ function setupGlobalPaymentsSecure1() {
 	showGlobalPaymentsAlert({wait: true});
 	
 	$.ajax({
-		url: '{{ api_secure_1_setup_url }}',
+		url: '<?php echo $api_secure_1_setup_url; ?>',
 		type: 'post',
 		data: $('#globalpayments_api_form :input'),
 		dataType: 'json',
@@ -358,7 +358,7 @@ function setupGlobalPaymentsSecure1() {
 				var secure_data = {'MD' : json['md'], 'PaReq' : json['pareq'], 'TermUrl' : json['termUrl']};
 				
 				RealexRemote.setAcsUrl(json['acsUrl']);
-				RealexRemote.lightbox.init('globalpayments_api_form', '{{ api_secure_1_authorization_url }}', secure_data);
+				RealexRemote.lightbox.init('globalpayments_api_form', '<?php echo $api_secure_1_authorization_url; ?>', secure_data);
 			}
 			
 			if (json['success']) {
@@ -370,7 +370,7 @@ function setupGlobalPaymentsSecure1() {
 		}
 	});
 }
-{% endif %}
+<?php } ?>
 
 function showGlobalPaymentsAlert(json) {
 	$('#globalpayments_form .alert').remove();
@@ -395,20 +395,20 @@ function showGlobalPaymentsAlert(json) {
 }
 
 function readyGlobalPayments() {
-	{% if (checkout == 'hpp') %}
+	<?php if ($checkout == 'hpp') { ?>
 	if (typeof RealexHpp === 'undefined') {
 		setTimeout(readyGlobalPayments, 100);
 	} else {
 		setupGlobalPayments();
 	}
-	{% endif %}
-	{% if (checkout == 'api') %}
+	<?php } ?>
+	<?php if ($checkout == 'api') { ?>
 	if (typeof RealexRemote === 'undefined') {
 		setTimeout(readyGlobalPayments, 100);
 	} else {
 		setupGlobalPayments();
 	}
-	{% endif %}
+	<?php } ?>
 }
 
 function readyGlobalPaymentsSecure() {
@@ -419,7 +419,7 @@ function readyGlobalPaymentsSecure() {
 	}
 }
 
-{% if (checkout == 'hpp') %}
+<?php if ($checkout == 'hpp') { ?>
 if (typeof RealexHpp === 'undefined') {
 	var script = document.createElement('script');
 	script.type = 'text/javascript';
@@ -432,8 +432,8 @@ if (typeof RealexHpp === 'undefined') {
 } else {
 	setupGlobalPayments();
 }
-{% endif %}
-{% if (checkout == 'api') %}
+<?php } ?>
+<?php if ($checkout == 'api') { ?>
 if (typeof RealexRemote === 'undefined') {
 	var script = document.createElement('script');
 	script.type = 'text/javascript';
@@ -446,8 +446,8 @@ if (typeof RealexRemote === 'undefined') {
 } else {
 	setupGlobalPayments();
 }
-{% endif %}
-{% if ((checkout == 'api') and secure_status) %}
+<?php } ?>
+<?php if (($checkout == 'api') && $secure_status) { ?>
 if (typeof GlobalPayments === 'undefined') {	
 	var script = document.createElement('script');
 	script.type = 'text/javascript';
@@ -459,6 +459,6 @@ if (typeof GlobalPayments === 'undefined') {
 } else {
 	setupGlobalPaymentsSecure2();
 }
-{% endif %}
+<?php } ?>
 
 </script>
