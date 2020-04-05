@@ -1,11 +1,11 @@
 <?php
-class ControllerExtensionPaymentGlobalPayments extends Controller {
+class ControllerPaymentGlobalPayments extends Controller {
 	private $error = array();
 	
 	public function index() {
-		$this->load->language('extension/payment/globalpayments');
+		$this->load->language('payment/globalpayments');
 						
-		$this->load->model('extension/payment/globalpayments');
+		$this->load->model('payment/globalpayments');
 		$this->load->model('checkout/order');
 		$this->load->model('localisation/zone');
 		$this->load->model('localisation/country');
@@ -18,24 +18,24 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 			
 		$config_setting = $_config->get('globalpayments_setting');
 		
-		$setting = array_replace_recursive((array)$config_setting, (array)$this->config->get('payment_globalpayments_setting'));
+		$setting = array_replace_recursive((array)$config_setting, (array)$this->config->get('globalpayments_setting'));
 						
-		$data['merchant_id'] = $this->config->get('payment_globalpayments_merchant_id');
-		$data['account_id'] = $this->config->get('payment_globalpayments_account_id');
-		$data['secret'] = $this->config->get('payment_globalpayments_secret');
-		$data['checkout'] = $this->config->get('payment_globalpayments_checkout');
-		$data['environment'] = $this->config->get('payment_globalpayments_environment');
+		$data['merchant_id'] = $this->config->get('globalpayments_merchant_id');
+		$data['account_id'] = $this->config->get('globalpayments_account_id');
+		$data['secret'] = $this->config->get('globalpayments_secret');
+		$data['checkout'] = $this->config->get('globalpayments_checkout');
+		$data['environment'] = $this->config->get('globalpayments_environment');
 		$data['service'] = $setting['service'][$data['checkout']][$data['environment']];
-		$data['hpp_url'] = $this->url->link('extension/payment/globalpayments/hpp');
-		$data['api_url'] = $this->url->link('extension/payment/globalpayments/api');
-		$data['api_secure_2_check_version_url'] = $this->url->link('extension/payment/globalpayments/apiSecure2CheckVersion');
-		$data['api_secure_2_initiate_authentication_url'] = $this->url->link('extension/payment/globalpayments/apiSecure2InitiateAuthentication');
-		$data['api_secure_2_authorization_url'] = $this->url->link('extension/payment/globalpayments/apiSecure2Authorization');
-		$data['api_secure_1_setup_url'] = $this->url->link('extension/payment/globalpayments/apiSecure1Setup');
-		$data['api_secure_1_authorization_url'] = $this->url->link('extension/payment/globalpayments/apiSecure1Authorization');
+		$data['hpp_url'] = $this->url->link('payment/globalpayments/hpp');
+		$data['api_url'] = $this->url->link('payment/globalpayments/api');
+		$data['api_secure_2_check_version_url'] = $this->url->link('payment/globalpayments/apiSecure2CheckVersion');
+		$data['api_secure_2_initiate_authentication_url'] = $this->url->link('payment/globalpayments/apiSecure2InitiateAuthentication');
+		$data['api_secure_2_authorization_url'] = $this->url->link('payment/globalpayments/apiSecure2Authorization');
+		$data['api_secure_1_setup_url'] = $this->url->link('payment/globalpayments/apiSecure1Setup');
+		$data['api_secure_1_authorization_url'] = $this->url->link('payment/globalpayments/apiSecure1Authorization');
 		
 		if ($data['checkout'] == 'hpp') {
-			require_once DIR_SYSTEM .'library/globalpayments/GlobalPayments.php';
+			require_once DIR_SYSTEM . 'library/globalpayments/GlobalPayments.php';
 
 			$servicesConfig = new GlobalPayments\Api\ServicesConfig();
 		
@@ -114,7 +114,7 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 					$data['hpp'] = $hostedService->charge($order_info['total'])->withCurrency($order_info['currency_code'])->withHostedPaymentData($hostedPaymentData)->withAddress($billingAddress, GlobalPayments\Api\Entities\Enums\AddressType::BILLING)->serialize();
 				}
 			} catch (GlobalPayments\Api\Entities\Exceptions\ApiException $exception) {
-				$this->model_extension_payment_globalpayments->log($exception, $responseCode . ' ' . $responseMessage);
+				$this->model_payment_globalpayments->log($exception, $responseCode . ' ' . $responseMessage);
 				
 				$this->error['warning'] = $exception->responseCode . ' ' . $exception->responseMessage;
 			}	
@@ -125,6 +125,13 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 			$data['form_size'] = $setting['checkout']['api']['form_size'];
 			$data['form_width'] = $setting['form_width'][$data['form_size']];
 			$data['secure_status'] = $setting['checkout']['api']['secure_status'];
+			
+			$data['entry_card_number'] = $this->language->get('entry_card_number');
+			$data['entry_card_holder_name'] = $this->language->get('entry_card_holder_name');
+			$data['entry_card_expire_date'] = $this->language->get('entry_card_expire_date');
+			$data['entry_card_cvn'] = $this->language->get('entry_card_cvn');
+		
+			$data['button_pay'] = $this->language->get('button_pay');
 			
 			$data['months'] = array();
 
@@ -147,13 +154,13 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 			}
 		}
 		
-		return $this->load->view('extension/payment/globalpayments', $data);
+		return $this->load->view('payment/globalpayments', $data);
 	}
 	
 	public function hpp() {
-		$this->load->language('extension/payment/globalpayments');
+		$this->load->language('payment/globalpayments');
 						
-		$this->load->model('extension/payment/globalpayments');
+		$this->load->model('payment/globalpayments');
 		
 		if (isset($this->request->post['hppResponse'])) {
 			$this->load->model('checkout/order');
@@ -166,17 +173,17 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 			
 			$config_setting = $_config->get('globalpayments_setting');
 		
-			$setting = array_replace_recursive((array)$config_setting, (array)$this->config->get('payment_globalpayments_setting'));
+			$setting = array_replace_recursive((array)$config_setting, (array)$this->config->get('globalpayments_setting'));
 						
-			$merchant_id = $this->config->get('payment_globalpayments_merchant_id');
-			$account_id = $this->config->get('payment_globalpayments_account_id');
-			$secret = $this->config->get('payment_globalpayments_secret');
-			$checkout = $this->config->get('payment_globalpayments_checkout');
-			$environment = $this->config->get('payment_globalpayments_environment');
-			$settlement_method = $this->config->get('payment_globalpayments_settlement_method');
+			$merchant_id = $this->config->get('globalpayments_merchant_id');
+			$account_id = $this->config->get('globalpayments_account_id');
+			$secret = $this->config->get('globalpayments_secret');
+			$checkout = $this->config->get('globalpayments_checkout');
+			$environment = $this->config->get('globalpayments_environment');
+			$settlement_method = $this->config->get('globalpayments_settlement_method');
 			$service = $setting['service'][$checkout][$environment];
 						
-			require_once DIR_SYSTEM .'library/globalpayments/GlobalPayments.php';
+			require_once DIR_SYSTEM . 'library/globalpayments/GlobalPayments.php';
 
 			$servicesConfig = new GlobalPayments\Api\ServicesConfig();
 		
@@ -226,7 +233,7 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 					$this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $setting['order_status']['decline_bank']['id'], $responseMessage);
 				} 
 				
-				$this->model_extension_payment_globalpayments->log($exception, $responseCode . ' ' . $responseMessage);
+				$this->model_payment_globalpayments->log($exception, $responseCode . ' ' . $responseMessage);
 				
 				$this->error['warning'] = $responseCode . ' ' . $responseMessage;
 			}
@@ -243,9 +250,9 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 	}
 	
 	public function api() {
-		$this->load->language('extension/payment/globalpayments');
+		$this->load->language('payment/globalpayments');
 										
-		$this->load->model('extension/payment/globalpayments');
+		$this->load->model('payment/globalpayments');
 		
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {							
 			$this->load->model('checkout/order');
@@ -258,17 +265,17 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 			
 			$config_setting = $_config->get('globalpayments_setting');
 		
-			$setting = array_replace_recursive((array)$config_setting, (array)$this->config->get('payment_globalpayments_setting'));
+			$setting = array_replace_recursive((array)$config_setting, (array)$this->config->get('globalpayments_setting'));
 						
-			$merchant_id = $this->config->get('payment_globalpayments_merchant_id');
-			$account_id = $this->config->get('payment_globalpayments_account_id');
-			$secret = $this->config->get('payment_globalpayments_secret');
-			$checkout = $this->config->get('payment_globalpayments_checkout');
-			$environment = $this->config->get('payment_globalpayments_environment');
-			$settlement_method = $this->config->get('payment_globalpayments_settlement_method');
+			$merchant_id = $this->config->get('globalpayments_merchant_id');
+			$account_id = $this->config->get('globalpayments_account_id');
+			$secret = $this->config->get('globalpayments_secret');
+			$checkout = $this->config->get('globalpayments_checkout');
+			$environment = $this->config->get('globalpayments_environment');
+			$settlement_method = $this->config->get('globalpayments_settlement_method');
 			$service = $setting['service'][$checkout][$environment];
 						
-			require_once DIR_SYSTEM .'library/globalpayments/GlobalPayments.php';
+			require_once DIR_SYSTEM . 'library/globalpayments/GlobalPayments.php';
 
 			$servicesConfig = new GlobalPayments\Api\ServicesConfig();
 		
@@ -327,7 +334,7 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 					$this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $setting['order_status']['decline_bank']['id'], $responseMessage);
 				}
 
-				$this->model_extension_payment_globalpayments->log($exception, $responseCode . ' ' . $responseMessage);
+				$this->model_payment_globalpayments->log($exception, $responseCode . ' ' . $responseMessage);
 				
 				$this->error['warning'] = $responseCode . ' ' . $responseMessage;
 			}
@@ -344,31 +351,31 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 	}
 	
 	public function apiSecure2CheckVersion() {
-		$this->load->language('extension/payment/globalpayments');
+		$this->load->language('payment/globalpayments');
 		
-		$this->load->model('extension/payment/globalpayments');
+		$this->load->model('payment/globalpayments');
 		
 		$input_data = json_decode(html_entity_decode(file_get_contents('php://input')), true);
 		
 		$output_data = array();
 			
 		if (isset($input_data['card']['number'])) {
-			$merchant_id = $this->config->get('payment_globalpayments_merchant_id');
-			$account_id = $this->config->get('payment_globalpayments_account_id');
-			$secret = $this->config->get('payment_globalpayments_secret');
-			$checkout = $this->config->get('payment_globalpayments_checkout');
-			$environment = $this->config->get('payment_globalpayments_environment');
-			$settlement_method = $this->config->get('payment_globalpayments_settlement_method');
+			$merchant_id = $this->config->get('globalpayments_merchant_id');
+			$account_id = $this->config->get('globalpayments_account_id');
+			$secret = $this->config->get('globalpayments_secret');
+			$checkout = $this->config->get('globalpayments_checkout');
+			$environment = $this->config->get('globalpayments_environment');
+			$settlement_method = $this->config->get('globalpayments_settlement_method');
 			
-			require_once DIR_SYSTEM .'library/globalpayments/GlobalPayments.php';
+			require_once DIR_SYSTEM . 'library/globalpayments/GlobalPayments.php';
 
 			$servicesConfig = new GlobalPayments\Api\ServicesConfig();
 		
 			$servicesConfig->merchantId = $merchant_id;
 			$servicesConfig->accountId = $account_id;
 			$servicesConfig->sharedSecret = $secret;
-			$servicesConfig->methodNotificationUrl = $this->url->link('extension/payment/globalpayments/apiSecure2MethodNotificationUrl');
-			$servicesConfig->challengeNotificationUrl = $this->url->link('extension/payment/globalpayments/apiSecure2ChallengeNotificationUrl');
+			$servicesConfig->methodNotificationUrl = $this->url->link('payment/globalpayments/apiSecure2MethodNotificationUrl');
+			$servicesConfig->challengeNotificationUrl = $this->url->link('payment/globalpayments/apiSecure2ChallengeNotificationUrl');
 			$servicesConfig->merchantContactUrl = $this->url->link('information/contact');
 			$servicesConfig->secure3dVersion = GlobalPayments\Api\Entities\Enums\Secure3dVersion::TWO;
 						
@@ -384,7 +391,7 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 				$responseCode = $exception->responseCode;
 				$responseMessage = $exception->responseMessage;
 				
-				$this->model_extension_payment_globalpayments->log($exception, $responseCode . ' ' . $responseMessage);
+				$this->model_payment_globalpayments->log($exception, $responseCode . ' ' . $responseMessage);
 				
 				$this->error['warning'] = $responseCode . ' ' . $responseMessage;
 			}
@@ -414,9 +421,9 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 	}
 	
 	public function apiSecure2InitiateAuthentication() {
-		$this->load->language('extension/payment/globalpayments');
+		$this->load->language('payment/globalpayments');
 		
-		$this->load->model('extension/payment/globalpayments');
+		$this->load->model('payment/globalpayments');
 		
 		$input_data = json_decode(html_entity_decode(file_get_contents('php://input')), true);
 				
@@ -435,24 +442,24 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 			
 			$config_setting = $_config->get('globalpayments_setting');
 		
-			$setting = array_replace_recursive((array)$config_setting, (array)$this->config->get('payment_globalpayments_setting'));
+			$setting = array_replace_recursive((array)$config_setting, (array)$this->config->get('globalpayments_setting'));
 			
-			$merchant_id = $this->config->get('payment_globalpayments_merchant_id');
-			$account_id = $this->config->get('payment_globalpayments_account_id');
-			$secret = $this->config->get('payment_globalpayments_secret');
-			$checkout = $this->config->get('payment_globalpayments_checkout');
-			$environment = $this->config->get('payment_globalpayments_environment');
-			$settlement_method = $this->config->get('payment_globalpayments_settlement_method');
+			$merchant_id = $this->config->get('globalpayments_merchant_id');
+			$account_id = $this->config->get('globalpayments_account_id');
+			$secret = $this->config->get('globalpayments_secret');
+			$checkout = $this->config->get('globalpayments_checkout');
+			$environment = $this->config->get('globalpayments_environment');
+			$settlement_method = $this->config->get('globalpayments_settlement_method');
 			
-			require_once DIR_SYSTEM .'library/globalpayments/GlobalPayments.php';
+			require_once DIR_SYSTEM . 'library/globalpayments/GlobalPayments.php';
 
 			$servicesConfig = new GlobalPayments\Api\ServicesConfig();
 		
 			$servicesConfig->merchantId = $merchant_id;
 			$servicesConfig->accountId = $account_id;
 			$servicesConfig->sharedSecret = $secret;
-			$servicesConfig->methodNotificationUrl = $this->url->link('extension/payment/globalpayments/apiSecure2MethodNotificationUrl');
-			$servicesConfig->challengeNotificationUrl = $this->url->link('extension/payment/globalpayments/apiSecure2ChallengeNotificationUrl');
+			$servicesConfig->methodNotificationUrl = $this->url->link('payment/globalpayments/apiSecure2MethodNotificationUrl');
+			$servicesConfig->challengeNotificationUrl = $this->url->link('payment/globalpayments/apiSecure2ChallengeNotificationUrl');
 			$servicesConfig->merchantContactUrl = $this->url->link('information/contact');
 			$servicesConfig->secure3dVersion = GlobalPayments\Api\Entities\Enums\Secure3dVersion::TWO;
 						
@@ -568,7 +575,7 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 				$responseCode = $exception->responseCode;
 				$responseMessage = $exception->responseMessage;
 				
-				$this->model_extension_payment_globalpayments->log($exception, $responseCode . ' ' . $responseMessage);
+				$this->model_payment_globalpayments->log($exception, $responseCode . ' ' . $responseMessage);
 				
 				$this->error['warning'] = $responseCode . ' ' . $responseMessage;
 			}
@@ -603,9 +610,9 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 	}
 	
 	public function apiSecure2Authorization() {
-		$this->load->language('extension/payment/globalpayments');
+		$this->load->language('payment/globalpayments');
 										
-		$this->load->model('extension/payment/globalpayments');
+		$this->load->model('payment/globalpayments');
 		
 		if (isset($this->request->post['authenticationData']) && $this->validate()) {
 			$this->load->model('checkout/order');
@@ -618,19 +625,19 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 			
 			$config_setting = $_config->get('globalpayments_setting');
 		
-			$setting = array_replace_recursive((array)$config_setting, (array)$this->config->get('payment_globalpayments_setting'));
+			$setting = array_replace_recursive((array)$config_setting, (array)$this->config->get('globalpayments_setting'));
 						
-			$merchant_id = $this->config->get('payment_globalpayments_merchant_id');
-			$account_id = $this->config->get('payment_globalpayments_account_id');
-			$secret = $this->config->get('payment_globalpayments_secret');
-			$checkout = $this->config->get('payment_globalpayments_checkout');
-			$environment = $this->config->get('payment_globalpayments_environment');
-			$settlement_method = $this->config->get('payment_globalpayments_settlement_method');
+			$merchant_id = $this->config->get('globalpayments_merchant_id');
+			$account_id = $this->config->get('globalpayments_account_id');
+			$secret = $this->config->get('globalpayments_secret');
+			$checkout = $this->config->get('globalpayments_checkout');
+			$environment = $this->config->get('globalpayments_environment');
+			$settlement_method = $this->config->get('globalpayments_settlement_method');
 			$service = $setting['service'][$checkout][$environment];
 			
 			$authentication_data = json_decode(htmlspecialchars_decode($this->request->post['authenticationData']), true);
 			
-			require_once DIR_SYSTEM .'library/globalpayments/GlobalPayments.php';
+			require_once DIR_SYSTEM . 'library/globalpayments/GlobalPayments.php';
 										
 			if ($authentication_data['status'] !== 'CHALLENGE_REQUIRED') {
 				$secure_scenario_code = strtolower($authentication_data['status']);
@@ -650,8 +657,8 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 					$servicesConfig->accountId = $account_id;
 					$servicesConfig->sharedSecret = $secret;
 					$servicesConfig->serviceUrl = $service['url'];
-					$servicesConfig->methodNotificationUrl = $this->url->link('extension/payment/globalpayments/apiSecure2MethodNotificationUrl');
-					$servicesConfig->challengeNotificationUrl = $this->url->link('extension/payment/globalpayments/apiSecure2ChallengeNotificationUrl');
+					$servicesConfig->methodNotificationUrl = $this->url->link('payment/globalpayments/apiSecure2MethodNotificationUrl');
+					$servicesConfig->challengeNotificationUrl = $this->url->link('payment/globalpayments/apiSecure2ChallengeNotificationUrl');
 					$servicesConfig->merchantContactUrl = $this->url->link('information/contact');
 					$servicesConfig->secure3dVersion = GlobalPayments\Api\Entities\Enums\Secure3dVersion::TWO;
 									
@@ -667,7 +674,7 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 						$responseCode = $exception->responseCode;
 						$responseMessage = $exception->responseMessage;
 				
-						$this->model_extension_payment_globalpayments->log($exception, $responseCode . ' ' . $responseMessage);
+						$this->model_payment_globalpayments->log($exception, $responseCode . ' ' . $responseMessage);
 				
 						$this->error['warning'] = $responseCode . ' ' . $responseMessage;
 					}
@@ -740,7 +747,7 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 						$this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $setting['order_status']['decline_bank']['id'], $responseMessage);
 					}
 				
-					$this->model_extension_payment_globalpayments->log($exception, $responseCode . ' ' . $responseMessage);
+					$this->model_payment_globalpayments->log($exception, $responseCode . ' ' . $responseMessage);
 					
 					$this->error['warning'] = $responseCode . ' ' . $responseMessage;
 				}
@@ -758,7 +765,7 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 	}
 
 	public function apiSecure2MethodNotificationUrl() {
-		$this->load->model('extension/payment/globalpayments');
+		$this->load->model('payment/globalpayments');
 		
 		if (isset($this->request->request['threeDSMethodData'])) {
 			$threeDSMethodData = $this->request->request['threeDSMethodData'];
@@ -767,15 +774,15 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 				$decodedThreeDSMethodData = base64_decode($threeDSMethodData);
 				$data = json_decode($decodedThreeDSMethodData, true);
 				
-				$this->response->setOutput($this->load->view('extension/payment/globalpayments/api_secure_2_method_notification', $data));
+				$this->response->setOutput($this->load->view('payment/globalpayments/api_secure_2_method_notification', $data));
 			} catch (Exception $exception) {				
-				$this->model_extension_payment_globalpayments->log($exception);
+				$this->model_payment_globalpayments->log($exception);
 			}
 		}
 	}
 	
 	public function apiSecure2ChallengeNotificationUrl() {
-		$this->load->model('extension/payment/globalpayments');
+		$this->load->model('payment/globalpayments');
 				
 		if (isset($this->request->request['cres'])) {
 			$cres = $this->request->request['cres'];
@@ -784,17 +791,17 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 				$decodedString = base64_decode($cres);
 				$data = json_decode($decodedString, true);
 
-				$this->response->setOutput($this->load->view('extension/payment/globalpayments/api_secure_2_challenge_notification', $data));
+				$this->response->setOutput($this->load->view('payment/globalpayments/api_secure_2_challenge_notification', $data));
 			} catch (Exception $exception) {
-				$this->model_extension_payment_globalpayments->log($exception);
+				$this->model_payment_globalpayments->log($exception);
 			}
 		}
 	}
 		
 	public function apiSecure1Setup() {
-		$this->load->language('extension/payment/globalpayments');
+		$this->load->language('payment/globalpayments');
 		
-		$this->load->model('extension/payment/globalpayments');
+		$this->load->model('payment/globalpayments');
 					
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {							
 			$this->load->model('checkout/order');
@@ -807,17 +814,17 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 			
 			$config_setting = $_config->get('globalpayments_setting');
 		
-			$setting = array_replace_recursive((array)$config_setting, (array)$this->config->get('payment_globalpayments_setting'));
+			$setting = array_replace_recursive((array)$config_setting, (array)$this->config->get('globalpayments_setting'));
 						
-			$merchant_id = $this->config->get('payment_globalpayments_merchant_id');
-			$account_id = $this->config->get('payment_globalpayments_account_id');
-			$secret = $this->config->get('payment_globalpayments_secret');
-			$checkout = $this->config->get('payment_globalpayments_checkout');
-			$environment = $this->config->get('payment_globalpayments_environment');
-			$settlement_method = $this->config->get('payment_globalpayments_settlement_method');
+			$merchant_id = $this->config->get('globalpayments_merchant_id');
+			$account_id = $this->config->get('globalpayments_account_id');
+			$secret = $this->config->get('globalpayments_secret');
+			$checkout = $this->config->get('globalpayments_checkout');
+			$environment = $this->config->get('globalpayments_environment');
+			$settlement_method = $this->config->get('globalpayments_settlement_method');
 			$service = $setting['service'][$checkout][$environment];
 			
-			require_once DIR_SYSTEM .'library/globalpayments/GlobalPayments.php';
+			require_once DIR_SYSTEM . 'library/globalpayments/GlobalPayments.php';
 
 			$servicesConfig = new GlobalPayments\Api\ServicesConfig();
 		
@@ -844,7 +851,7 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 				$responseCode = $exception->responseCode;
 				$responseMessage = $exception->responseMessage;
 				
-				$this->model_extension_payment_globalpayments->log($exception, $responseCode . ' ' . $responseMessage);
+				$this->model_payment_globalpayments->log($exception, $responseCode . ' ' . $responseMessage);
 				
 				$this->error['warning'] = $responseCode . ' ' . $responseMessage;
 			}
@@ -857,7 +864,7 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 					$data['acsUrl'] = $threeDSecureData->issuerAcsUrl;
 					$data['pareq'] = $threeDSecureData->payerAuthenticationRequest;
 					$data['md'] = $threeDSecureData->getMerchantData()->toString();
-					$data['termUrl'] = $this->url->link('extension/payment/globalpayments/apiSecure1ACSReturn', '', true);
+					$data['termUrl'] = $this->url->link('payment/globalpayments/apiSecure1ACSReturn', '', true);
 				} else {
 					$secure_scenario_code = '';
 					
@@ -915,7 +922,7 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 								$this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $setting['order_status']['decline_bank']['id'], $responseMessage);
 							}
 
-							$this->model_extension_payment_globalpayments->log($exception, $responseCode . ' ' . $responseMessage);
+							$this->model_payment_globalpayments->log($exception, $responseCode . ' ' . $responseMessage);
 				
 							$this->error['warning'] = $responseCode . ' ' . $responseMessage;
 						}
@@ -935,9 +942,9 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 	}
 	
 	public function apiSecure1ACSReturn() {
-		$this->load->language('extension/payment/globalpayments');
+		$this->load->language('payment/globalpayments');
 		
-		$this->load->model('extension/payment/globalpayments');
+		$this->load->model('payment/globalpayments');
 		
 		if (isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1'))) {
 			$data['server'] = HTTPS_SERVER;
@@ -956,17 +963,17 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 			
 			$config_setting = $_config->get('globalpayments_setting');
 		
-			$setting = array_replace_recursive((array)$config_setting, (array)$this->config->get('payment_globalpayments_setting'));
+			$setting = array_replace_recursive((array)$config_setting, (array)$this->config->get('globalpayments_setting'));
 						
-			$merchant_id = $this->config->get('payment_globalpayments_merchant_id');
-			$account_id = $this->config->get('payment_globalpayments_account_id');
-			$secret = $this->config->get('payment_globalpayments_secret');
-			$checkout = $this->config->get('payment_globalpayments_checkout');
-			$environment = $this->config->get('payment_globalpayments_environment');
-			$settlement_method = $this->config->get('payment_globalpayments_settlement_method');
+			$merchant_id = $this->config->get('globalpayments_merchant_id');
+			$account_id = $this->config->get('globalpayments_account_id');
+			$secret = $this->config->get('globalpayments_secret');
+			$checkout = $this->config->get('globalpayments_checkout');
+			$environment = $this->config->get('globalpayments_environment');
+			$settlement_method = $this->config->get('globalpayments_settlement_method');
 			$service = $setting['service'][$checkout][$environment];
 			
-			require_once DIR_SYSTEM .'library/globalpayments/GlobalPayments.php';
+			require_once DIR_SYSTEM . 'library/globalpayments/GlobalPayments.php';
 
 			$servicesConfig = new GlobalPayments\Api\ServicesConfig();
 		
@@ -988,7 +995,7 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 				$responseCode = $exception->responseCode;
 				$responseMessage = $exception->responseMessage;
 				
-				$this->model_extension_payment_globalpayments->log($exception, $responseCode . ' ' . $responseMessage);
+				$this->model_payment_globalpayments->log($exception, $responseCode . ' ' . $responseMessage);
 				
 				$this->error['warning'] = $responseCode . ' ' . $responseMessage;
 			}
@@ -1005,13 +1012,13 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 		
 		$data['authentication_data'] = json_encode($data['authentication_data']);
 		
-		$this->response->setOutput($this->load->view('extension/payment/globalpayments/api_secure_1_acs_return', $data));
+		$this->response->setOutput($this->load->view('payment/globalpayments/api_secure_1_acs_return', $data));
 	}
 	
 	public function apiSecure1Authorization() {
-		$this->load->language('extension/payment/globalpayments');
+		$this->load->language('payment/globalpayments');
 										
-		$this->load->model('extension/payment/globalpayments');
+		$this->load->model('payment/globalpayments');
 		
 		if (isset($this->request->post['authenticationData']) && $this->validate()) {
 			$this->load->model('checkout/order');
@@ -1024,14 +1031,14 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 			
 			$config_setting = $_config->get('globalpayments_setting');
 		
-			$setting = array_replace_recursive((array)$config_setting, (array)$this->config->get('payment_globalpayments_setting'));
+			$setting = array_replace_recursive((array)$config_setting, (array)$this->config->get('globalpayments_setting'));
 						
-			$merchant_id = $this->config->get('payment_globalpayments_merchant_id');
-			$account_id = $this->config->get('payment_globalpayments_account_id');
-			$secret = $this->config->get('payment_globalpayments_secret');
-			$checkout = $this->config->get('payment_globalpayments_checkout');
-			$environment = $this->config->get('payment_globalpayments_environment');
-			$settlement_method = $this->config->get('payment_globalpayments_settlement_method');
+			$merchant_id = $this->config->get('globalpayments_merchant_id');
+			$account_id = $this->config->get('globalpayments_account_id');
+			$secret = $this->config->get('globalpayments_secret');
+			$checkout = $this->config->get('globalpayments_checkout');
+			$environment = $this->config->get('globalpayments_environment');
+			$settlement_method = $this->config->get('globalpayments_settlement_method');
 			$service = $setting['service'][$checkout][$environment];
 			
 			$authentication_data = json_decode(htmlspecialchars_decode($this->request->post['authenticationData']), true);
@@ -1059,7 +1066,7 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 			}
 			
 			if (!$this->error) {
-				require_once DIR_SYSTEM .'library/globalpayments/GlobalPayments.php';
+				require_once DIR_SYSTEM . 'library/globalpayments/GlobalPayments.php';
 				
 				$servicesConfig = new GlobalPayments\Api\ServicesConfig();
 		
@@ -1124,7 +1131,7 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 						$this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $setting['order_status']['decline_bank']['id'], $responseMessage);
 					}
 
-					$this->model_extension_payment_globalpayments->log($exception, $responseCode . ' ' . $responseMessage);
+					$this->model_payment_globalpayments->log($exception, $responseCode . ' ' . $responseMessage);
 				
 					$this->error['warning'] = $responseCode . ' ' . $responseMessage;
 				}

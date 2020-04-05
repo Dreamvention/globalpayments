@@ -15,8 +15,8 @@
 
 $(document).ready(function() {
     var postToIFrame = true;
-    var originUrl = '{{ server }}';
-    var authResult = '{{ authentication_data }}';
+    var originUrl = '<?php echo $server; ?>';
+    var authResult = '<?php echo $authentication_data; ?>';
     var mobileDetect = new MobileDetect(window.navigator.userAgent);
     var is_uiwebview = /(iPhone|iPod|iPad).*AppleWebKit(?!.*Safari)/i.test(navigator.userAgent);
 
