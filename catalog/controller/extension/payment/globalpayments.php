@@ -35,7 +35,7 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 		$data['api_secure_1_authorization_url'] = $this->url->link('extension/payment/globalpayments/apiSecure1Authorization');
 		
 		if ($data['checkout'] == 'hpp') {
-			require_once DIR_SYSTEM .'library/globalpayments/GlobalPayments.php';
+			require_once DIR_SYSTEM . 'library/globalpayments/GlobalPayments.php';
 
 			$servicesConfig = new GlobalPayments\Api\ServicesConfig();
 		
@@ -176,7 +176,7 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 			$settlement_method = $this->config->get('payment_globalpayments_settlement_method');
 			$service = $setting['service'][$checkout][$environment];
 						
-			require_once DIR_SYSTEM .'library/globalpayments/GlobalPayments.php';
+			require_once DIR_SYSTEM . 'library/globalpayments/GlobalPayments.php';
 
 			$servicesConfig = new GlobalPayments\Api\ServicesConfig();
 		
@@ -268,7 +268,7 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 			$settlement_method = $this->config->get('payment_globalpayments_settlement_method');
 			$service = $setting['service'][$checkout][$environment];
 						
-			require_once DIR_SYSTEM .'library/globalpayments/GlobalPayments.php';
+			require_once DIR_SYSTEM . 'library/globalpayments/GlobalPayments.php';
 
 			$servicesConfig = new GlobalPayments\Api\ServicesConfig();
 		
@@ -360,7 +360,7 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 			$environment = $this->config->get('payment_globalpayments_environment');
 			$settlement_method = $this->config->get('payment_globalpayments_settlement_method');
 			
-			require_once DIR_SYSTEM .'library/globalpayments/GlobalPayments.php';
+			require_once DIR_SYSTEM . 'library/globalpayments/GlobalPayments.php';
 
 			$servicesConfig = new GlobalPayments\Api\ServicesConfig();
 		
@@ -444,7 +444,7 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 			$environment = $this->config->get('payment_globalpayments_environment');
 			$settlement_method = $this->config->get('payment_globalpayments_settlement_method');
 			
-			require_once DIR_SYSTEM .'library/globalpayments/GlobalPayments.php';
+			require_once DIR_SYSTEM . 'library/globalpayments/GlobalPayments.php';
 
 			$servicesConfig = new GlobalPayments\Api\ServicesConfig();
 		
@@ -630,7 +630,7 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 			
 			$authentication_data = json_decode(htmlspecialchars_decode($this->request->post['authenticationData']), true);
 			
-			require_once DIR_SYSTEM .'library/globalpayments/GlobalPayments.php';
+			require_once DIR_SYSTEM . 'library/globalpayments/GlobalPayments.php';
 										
 			if ($authentication_data['status'] !== 'CHALLENGE_REQUIRED') {
 				$secure_scenario_code = strtolower($authentication_data['status']);
@@ -817,7 +817,7 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 			$settlement_method = $this->config->get('payment_globalpayments_settlement_method');
 			$service = $setting['service'][$checkout][$environment];
 			
-			require_once DIR_SYSTEM .'library/globalpayments/GlobalPayments.php';
+			require_once DIR_SYSTEM . 'library/globalpayments/GlobalPayments.php';
 
 			$servicesConfig = new GlobalPayments\Api\ServicesConfig();
 		
@@ -966,7 +966,7 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 			$settlement_method = $this->config->get('payment_globalpayments_settlement_method');
 			$service = $setting['service'][$checkout][$environment];
 			
-			require_once DIR_SYSTEM .'library/globalpayments/GlobalPayments.php';
+			require_once DIR_SYSTEM . 'library/globalpayments/GlobalPayments.php';
 
 			$servicesConfig = new GlobalPayments\Api\ServicesConfig();
 		
@@ -1059,7 +1059,7 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 			}
 			
 			if (!$this->error) {
-				require_once DIR_SYSTEM .'library/globalpayments/GlobalPayments.php';
+				require_once DIR_SYSTEM . 'library/globalpayments/GlobalPayments.php';
 				
 				$servicesConfig = new GlobalPayments\Api\ServicesConfig();
 		
