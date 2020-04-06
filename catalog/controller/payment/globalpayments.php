@@ -35,6 +35,8 @@ class ControllerPaymentGlobalPayments extends Controller {
 		$data['api_secure_1_authorization_url'] = $this->url->link('payment/globalpayments/apiSecure1Authorization');
 		
 		if ($data['checkout'] == 'hpp') {
+			$data['button_pay'] = $this->language->get('button_pay');
+			
 			require_once DIR_SYSTEM . 'library/globalpayments/GlobalPayments.php';
 
 			$servicesConfig = new GlobalPayments\Api\ServicesConfig();
