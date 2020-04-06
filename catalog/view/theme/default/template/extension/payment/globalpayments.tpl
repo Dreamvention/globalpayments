@@ -178,8 +178,8 @@
 			</div>
 			<div class="buttons">
 				<div class="pull-right">
-					<input type="button" value="<?php echo $button_pay; ?>" id="globalpayments_api_button" data-loading-text="<?php echo $text_loading; ?>" class="btn btn-primary" />
-					<input type="button" value="<?php echo $button_pay; ?>" id="globalpayments_api_secure_button" data-loading-text="<?php echo $text_loading; ?>" class="btn btn-default hidden" />
+					<input type="button" value="<?php echo $button_pay; ?>" id="globalpayments_api_button" class="btn btn-primary" />
+					<input type="button" value="<?php echo $button_pay; ?>" id="globalpayments_api_secure_button" class="btn btn-default hidden" />
 				</div>
 			</div>
 		</form>
