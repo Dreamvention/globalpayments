@@ -26,13 +26,13 @@ class ControllerPaymentGlobalPayments extends Controller {
 		$data['checkout'] = $this->config->get('globalpayments_checkout');
 		$data['environment'] = $this->config->get('globalpayments_environment');
 		$data['service'] = $setting['service'][$data['checkout']][$data['environment']];
-		$data['hpp_url'] = $this->url->link('payment/globalpayments/hpp');
-		$data['api_url'] = $this->url->link('payment/globalpayments/api');
-		$data['api_secure_2_check_version_url'] = $this->url->link('payment/globalpayments/apiSecure2CheckVersion');
-		$data['api_secure_2_initiate_authentication_url'] = $this->url->link('payment/globalpayments/apiSecure2InitiateAuthentication');
-		$data['api_secure_2_authorization_url'] = $this->url->link('payment/globalpayments/apiSecure2Authorization');
-		$data['api_secure_1_setup_url'] = $this->url->link('payment/globalpayments/apiSecure1Setup');
-		$data['api_secure_1_authorization_url'] = $this->url->link('payment/globalpayments/apiSecure1Authorization');
+		$data['hpp_url'] = $this->url->link('payment/globalpayments/hpp', '', 'SSL');
+		$data['api_url'] = $this->url->link('payment/globalpayments/api', '', 'SSL');
+		$data['api_secure_2_check_version_url'] = $this->url->link('payment/globalpayments/apiSecure2CheckVersion', '', 'SSL');
+		$data['api_secure_2_initiate_authentication_url'] = $this->url->link('payment/globalpayments/apiSecure2InitiateAuthentication', '', 'SSL');
+		$data['api_secure_2_authorization_url'] = $this->url->link('payment/globalpayments/apiSecure2Authorization', '', 'SSL');
+		$data['api_secure_1_setup_url'] = $this->url->link('payment/globalpayments/apiSecure1Setup', '', 'SSL');
+		$data['api_secure_1_authorization_url'] = $this->url->link('payment/globalpayments/apiSecure1Authorization', '', 'SSL');
 		
 		if ($data['checkout'] == 'hpp') {
 			$data['button_pay'] = $this->language->get('button_pay');
@@ -135,6 +135,12 @@ class ControllerPaymentGlobalPayments extends Controller {
 		
 			$data['button_pay'] = $this->language->get('button_pay');
 			
+			$data['error_card_number'] = $this->language->get('error_card_number');
+			$data['error_card_holder_name'] = $this->language->get('error_card_holder_name');
+			$data['error_card_expire_date_format'] = $this->language->get('error_card_expire_date_format');
+			$data['error_card_expire_date_past'] = $this->language->get('error_card_expire_date_past');
+			$data['error_card_cvn'] = $this->language->get('error_card_cvn');
+						
 			$data['months'] = array();
 
 			for ($i = 1; $i <= 12; $i++) {
@@ -242,7 +248,7 @@ class ControllerPaymentGlobalPayments extends Controller {
 		}	
 		
 		if (!$this->error) {
-			$data['success'] = $this->url->link('checkout/success');
+			$data['success'] = $this->url->link('checkout/success', '', 'SSL');
 		}
 		
 		$data['error'] = $this->error;
@@ -343,7 +349,7 @@ class ControllerPaymentGlobalPayments extends Controller {
 		}
 		
 		if (!$this->error) {
-			$data['success'] = $this->url->link('checkout/success');
+			$data['success'] = $this->url->link('checkout/success', '', 'SSL');
 		}
 		
 		$data['error'] = $this->error;
@@ -376,9 +382,9 @@ class ControllerPaymentGlobalPayments extends Controller {
 			$servicesConfig->merchantId = $merchant_id;
 			$servicesConfig->accountId = $account_id;
 			$servicesConfig->sharedSecret = $secret;
-			$servicesConfig->methodNotificationUrl = $this->url->link('payment/globalpayments/apiSecure2MethodNotificationUrl');
-			$servicesConfig->challengeNotificationUrl = $this->url->link('payment/globalpayments/apiSecure2ChallengeNotificationUrl');
-			$servicesConfig->merchantContactUrl = $this->url->link('information/contact');
+			$servicesConfig->methodNotificationUrl = $this->url->link('payment/globalpayments/apiSecure2MethodNotificationUrl', '', 'SSL');
+			$servicesConfig->challengeNotificationUrl = $this->url->link('payment/globalpayments/apiSecure2ChallengeNotificationUrl', '', 'SSL');
+			$servicesConfig->merchantContactUrl = $this->url->link('information/contact', '', 'SSL');
 			$servicesConfig->secure3dVersion = GlobalPayments\Api\Entities\Enums\Secure3dVersion::TWO;
 						
 			GlobalPayments\Api\ServicesContainer::configure($servicesConfig);
@@ -460,9 +466,9 @@ class ControllerPaymentGlobalPayments extends Controller {
 			$servicesConfig->merchantId = $merchant_id;
 			$servicesConfig->accountId = $account_id;
 			$servicesConfig->sharedSecret = $secret;
-			$servicesConfig->methodNotificationUrl = $this->url->link('payment/globalpayments/apiSecure2MethodNotificationUrl');
-			$servicesConfig->challengeNotificationUrl = $this->url->link('payment/globalpayments/apiSecure2ChallengeNotificationUrl');
-			$servicesConfig->merchantContactUrl = $this->url->link('information/contact');
+			$servicesConfig->methodNotificationUrl = $this->url->link('payment/globalpayments/apiSecure2MethodNotificationUrl', '', 'SSL');
+			$servicesConfig->challengeNotificationUrl = $this->url->link('payment/globalpayments/apiSecure2ChallengeNotificationUrl', '', 'SSL');
+			$servicesConfig->merchantContactUrl = $this->url->link('information/contact', '', 'SSL');
 			$servicesConfig->secure3dVersion = GlobalPayments\Api\Entities\Enums\Secure3dVersion::TWO;
 						
 			GlobalPayments\Api\ServicesContainer::configure($servicesConfig);
@@ -659,9 +665,9 @@ class ControllerPaymentGlobalPayments extends Controller {
 					$servicesConfig->accountId = $account_id;
 					$servicesConfig->sharedSecret = $secret;
 					$servicesConfig->serviceUrl = $service['url'];
-					$servicesConfig->methodNotificationUrl = $this->url->link('payment/globalpayments/apiSecure2MethodNotificationUrl');
-					$servicesConfig->challengeNotificationUrl = $this->url->link('payment/globalpayments/apiSecure2ChallengeNotificationUrl');
-					$servicesConfig->merchantContactUrl = $this->url->link('information/contact');
+					$servicesConfig->methodNotificationUrl = $this->url->link('payment/globalpayments/apiSecure2MethodNotificationUrl', '', 'SSL');
+					$servicesConfig->challengeNotificationUrl = $this->url->link('payment/globalpayments/apiSecure2ChallengeNotificationUrl', '', 'SSL');
+					$servicesConfig->merchantContactUrl = $this->url->link('information/contact', '', 'SSL');
 					$servicesConfig->secure3dVersion = GlobalPayments\Api\Entities\Enums\Secure3dVersion::TWO;
 									
 					GlobalPayments\Api\ServicesContainer::configure($servicesConfig);
@@ -757,7 +763,7 @@ class ControllerPaymentGlobalPayments extends Controller {
 		}	
 		
 		if (!$this->error) {
-			$data['success'] = $this->url->link('checkout/success');
+			$data['success'] = $this->url->link('checkout/success', '', 'SSL');
 		}
 		
 		$data['error'] = $this->error;
@@ -931,7 +937,7 @@ class ControllerPaymentGlobalPayments extends Controller {
 					}
 					
 					if (!$this->error) {
-						$data['success'] = $this->url->link('checkout/success');
+						$data['success'] = $this->url->link('checkout/success', '', 'SSL');
 					}
 				}
 			}
@@ -1141,7 +1147,7 @@ class ControllerPaymentGlobalPayments extends Controller {
 		}
 		
 		if (!$this->error) {
-			$data['success'] = $this->url->link('checkout/success');
+			$data['success'] = $this->url->link('checkout/success', '', 'SSL');
 		}
 		
 		$data['error'] = $this->error;
