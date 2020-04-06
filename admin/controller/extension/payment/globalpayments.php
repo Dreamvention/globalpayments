@@ -96,6 +96,12 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 		} else {
 			$data['debug'] = $this->config->get('payment_globalpayments_debug');
 		}
+		
+		if (isset($this->request->post['payment_globalpayments_settlement_method'])) {
+			$data['settlement_method'] = $this->request->post['payment_globalpayments_settlement_method'];
+		} else {
+			$data['settlement_method'] = $this->config->get('payment_globalpayments_settlement_method');
+		}
 
 		if (isset($this->request->post['payment_globalpayments_total'])) {
 			$data['total'] = $this->request->post['payment_globalpayments_total'];

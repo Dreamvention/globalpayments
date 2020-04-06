@@ -26,13 +26,13 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 		$data['checkout'] = $this->config->get('payment_globalpayments_checkout');
 		$data['environment'] = $this->config->get('payment_globalpayments_environment');
 		$data['service'] = $setting['service'][$data['checkout']][$data['environment']];
-		$data['hpp_url'] = $this->url->link('extension/payment/globalpayments/hpp');
-		$data['api_url'] = $this->url->link('extension/payment/globalpayments/api');
-		$data['api_secure_2_check_version_url'] = $this->url->link('extension/payment/globalpayments/apiSecure2CheckVersion');
-		$data['api_secure_2_initiate_authentication_url'] = $this->url->link('extension/payment/globalpayments/apiSecure2InitiateAuthentication');
-		$data['api_secure_2_authorization_url'] = $this->url->link('extension/payment/globalpayments/apiSecure2Authorization');
-		$data['api_secure_1_setup_url'] = $this->url->link('extension/payment/globalpayments/apiSecure1Setup');
-		$data['api_secure_1_authorization_url'] = $this->url->link('extension/payment/globalpayments/apiSecure1Authorization');
+		$data['hpp_url'] = $this->url->link('extension/payment/globalpayments/hpp', '', true);
+		$data['api_url'] = $this->url->link('extension/payment/globalpayments/api', '', true);
+		$data['api_secure_2_check_version_url'] = $this->url->link('extension/payment/globalpayments/apiSecure2CheckVersion', '', true);
+		$data['api_secure_2_initiate_authentication_url'] = $this->url->link('extension/payment/globalpayments/apiSecure2InitiateAuthentication', '', true);
+		$data['api_secure_2_authorization_url'] = $this->url->link('extension/payment/globalpayments/apiSecure2Authorization', '', true);
+		$data['api_secure_1_setup_url'] = $this->url->link('extension/payment/globalpayments/apiSecure1Setup', '', true);
+		$data['api_secure_1_authorization_url'] = $this->url->link('extension/payment/globalpayments/apiSecure1Authorization', '', true);
 		
 		if ($data['checkout'] == 'hpp') {
 			require_once DIR_SYSTEM . 'library/globalpayments/GlobalPayments.php';
@@ -233,7 +233,7 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 		}	
 		
 		if (!$this->error) {
-			$data['success'] = $this->url->link('checkout/success');
+			$data['success'] = $this->url->link('checkout/success', '', true);
 		}
 		
 		$data['error'] = $this->error;
@@ -334,7 +334,7 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 		}
 		
 		if (!$this->error) {
-			$data['success'] = $this->url->link('checkout/success');
+			$data['success'] = $this->url->link('checkout/success', '', true);
 		}
 		
 		$data['error'] = $this->error;
@@ -367,9 +367,9 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 			$servicesConfig->merchantId = $merchant_id;
 			$servicesConfig->accountId = $account_id;
 			$servicesConfig->sharedSecret = $secret;
-			$servicesConfig->methodNotificationUrl = $this->url->link('extension/payment/globalpayments/apiSecure2MethodNotificationUrl');
-			$servicesConfig->challengeNotificationUrl = $this->url->link('extension/payment/globalpayments/apiSecure2ChallengeNotificationUrl');
-			$servicesConfig->merchantContactUrl = $this->url->link('information/contact');
+			$servicesConfig->methodNotificationUrl = $this->url->link('extension/payment/globalpayments/apiSecure2MethodNotificationUrl', '', true);
+			$servicesConfig->challengeNotificationUrl = $this->url->link('extension/payment/globalpayments/apiSecure2ChallengeNotificationUrl', '', true);
+			$servicesConfig->merchantContactUrl = $this->url->link('information/contact', '', true);
 			$servicesConfig->secure3dVersion = GlobalPayments\Api\Entities\Enums\Secure3dVersion::TWO;
 						
 			GlobalPayments\Api\ServicesContainer::configure($servicesConfig);
@@ -451,9 +451,9 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 			$servicesConfig->merchantId = $merchant_id;
 			$servicesConfig->accountId = $account_id;
 			$servicesConfig->sharedSecret = $secret;
-			$servicesConfig->methodNotificationUrl = $this->url->link('extension/payment/globalpayments/apiSecure2MethodNotificationUrl');
-			$servicesConfig->challengeNotificationUrl = $this->url->link('extension/payment/globalpayments/apiSecure2ChallengeNotificationUrl');
-			$servicesConfig->merchantContactUrl = $this->url->link('information/contact');
+			$servicesConfig->methodNotificationUrl = $this->url->link('extension/payment/globalpayments/apiSecure2MethodNotificationUrl', '', true);
+			$servicesConfig->challengeNotificationUrl = $this->url->link('extension/payment/globalpayments/apiSecure2ChallengeNotificationUrl', '', true);
+			$servicesConfig->merchantContactUrl = $this->url->link('information/contact', '', true);
 			$servicesConfig->secure3dVersion = GlobalPayments\Api\Entities\Enums\Secure3dVersion::TWO;
 						
 			GlobalPayments\Api\ServicesContainer::configure($servicesConfig);
@@ -650,9 +650,9 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 					$servicesConfig->accountId = $account_id;
 					$servicesConfig->sharedSecret = $secret;
 					$servicesConfig->serviceUrl = $service['url'];
-					$servicesConfig->methodNotificationUrl = $this->url->link('extension/payment/globalpayments/apiSecure2MethodNotificationUrl');
-					$servicesConfig->challengeNotificationUrl = $this->url->link('extension/payment/globalpayments/apiSecure2ChallengeNotificationUrl');
-					$servicesConfig->merchantContactUrl = $this->url->link('information/contact');
+					$servicesConfig->methodNotificationUrl = $this->url->link('extension/payment/globalpayments/apiSecure2MethodNotificationUrl', '', true);
+					$servicesConfig->challengeNotificationUrl = $this->url->link('extension/payment/globalpayments/apiSecure2ChallengeNotificationUrl', '', true);
+					$servicesConfig->merchantContactUrl = $this->url->link('information/contact', '', true);
 					$servicesConfig->secure3dVersion = GlobalPayments\Api\Entities\Enums\Secure3dVersion::TWO;
 									
 					GlobalPayments\Api\ServicesContainer::configure($servicesConfig);
@@ -748,7 +748,7 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 		}	
 		
 		if (!$this->error) {
-			$data['success'] = $this->url->link('checkout/success');
+			$data['success'] = $this->url->link('checkout/success', '', true);
 		}
 		
 		$data['error'] = $this->error;
@@ -922,7 +922,7 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 					}
 					
 					if (!$this->error) {
-						$data['success'] = $this->url->link('checkout/success');
+						$data['success'] = $this->url->link('checkout/success', '', true);
 					}
 				}
 			}
@@ -1132,7 +1132,7 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 		}
 		
 		if (!$this->error) {
-			$data['success'] = $this->url->link('checkout/success');
+			$data['success'] = $this->url->link('checkout/success', '', true);
 		}
 		
 		$data['error'] = $this->error;
