@@ -118,7 +118,7 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 			} catch (GlobalPayments\Api\Entities\Exceptions\ApiException $exception) {
 				$this->model_extension_payment_globalpayments->log($exception, $responseCode . ' ' . $responseMessage);
 				
-				$this->error['warning'] = $exception->responseCode . ' ' . $exception->responseMessage;
+				$this->error['warning'] = $exception->responseCode . ' ' . $exception->responseMessage . ' ' . sprintf($this->language->get('error_payment'), $this->url->link('information/contact', '', true));
 			}	
 		}
 		
@@ -219,7 +219,7 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 						$this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $setting['order_status']['success_unsettled']['id'], $responseMessage);
 					}
 				} else {
-					$this->error['warning'] = $responseCode . ' ' . $responseMessage;
+					$this->error['warning'] = $responseCode . ' ' . $responseMessage . ' ' . sprintf($this->language->get('error_payment'), $this->url->link('information/contact', '', true));
 				}
 			} catch (GlobalPayments\Api\Entities\Exceptions\ApiException $exception) {
 				$responseCode = $exception->responseCode;
@@ -243,7 +243,7 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 				
 				$this->model_extension_payment_globalpayments->log($exception, $responseCode . ' ' . $responseMessage);
 				
-				$this->error['warning'] = $responseCode . ' ' . $responseMessage;
+				$this->error['warning'] = $responseCode . ' ' . $responseMessage . ' ' . sprintf($this->language->get('error_payment'), $this->url->link('information/contact', '', true));
 			}
 		}	
 		
@@ -320,7 +320,7 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 						$this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $setting['order_status']['success_unsettled']['id'], $responseMessage);
 					}
 				} else {
-					$this->error['warning'] = $responseCode . ' ' . $responseMessage;
+					$this->error['warning'] = $responseCode . ' ' . $responseMessage . ' ' . sprintf($this->language->get('error_payment'), $this->url->link('information/contact', '', true));
 				}
 			} catch (GlobalPayments\Api\Entities\Exceptions\ApiException $exception) {
 				$responseCode = $exception->responseCode;
@@ -344,7 +344,7 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 
 				$this->model_extension_payment_globalpayments->log($exception, $responseCode . ' ' . $responseMessage);
 				
-				$this->error['warning'] = $responseCode . ' ' . $responseMessage;
+				$this->error['warning'] = $responseCode . ' ' . $responseMessage . ' ' . sprintf($this->language->get('error_payment'), $this->url->link('information/contact', '', true));
 			}
 		}
 		
@@ -401,7 +401,7 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 				
 				$this->model_extension_payment_globalpayments->log($exception, $responseCode . ' ' . $responseMessage);
 				
-				$this->error['warning'] = $responseCode . ' ' . $responseMessage;
+				$this->error['warning'] = $responseCode . ' ' . $responseMessage . ' ' . sprintf($this->language->get('error_payment'), $this->url->link('information/contact', '', true));
 			}
 
 			if (isset($threeDSecureData)) {
@@ -585,7 +585,7 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 				
 				$this->model_extension_payment_globalpayments->log($exception, $responseCode . ' ' . $responseMessage);
 				
-				$this->error['warning'] = $responseCode . ' ' . $responseMessage;
+				$this->error['warning'] = $responseCode . ' ' . $responseMessage . ' ' . sprintf($this->language->get('error_payment'), $this->url->link('information/contact', '', true));
 			}
 
 			$status = $threeDSecureData->status;
@@ -651,11 +651,11 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 				$secure_scenario_code = strtolower($authentication_data['status']);
 			
 				if (isset($setting['secure_2_scenario'][$secure_scenario_code]) && isset($setting['checkout']['api']['secure_2_scenario'][$secure_scenario_code]) && !$setting['checkout']['api']['secure_2_scenario'][$secure_scenario_code]) {
-					$this->error['warning'] = $this->language->get($setting['secure_2_scenario'][$secure_scenario_code]['error']);
+					$this->error['warning'] = $this->language->get($setting['secure_2_scenario'][$secure_scenario_code]['error']) . ' ' . sprintf($this->language->get('error_payment'), $this->url->link('information/contact', '', true));
 				}
 			} elseif (isset($authentication_data['challenge']['response']['data']['transStatus'])) {
 				if (($authentication_data['challenge']['response']['data']['transStatus'] != 'Y') && !$setting['checkout']['api']['secure_2_scenario']['authentication_failed']) {
-					$this->error['warning'] = $this->language->get($setting['secure_2_scenario']['authentication_failed']['error']);
+					$this->error['warning'] = $this->language->get($setting['secure_2_scenario']['authentication_failed']['error']) . ' ' . sprintf($this->language->get('error_payment'), $this->url->link('information/contact', '', true));
 				} else {
 					$serverTransactionId = $authentication_data['challenge']['response']['data']['threeDSServerTransID'];
 
@@ -684,7 +684,7 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 				
 						$this->model_extension_payment_globalpayments->log($exception, $responseCode . ' ' . $responseMessage);
 				
-						$this->error['warning'] = $responseCode . ' ' . $responseMessage;
+						$this->error['warning'] = $responseCode . ' ' . $responseMessage . ' ' . sprintf($this->language->get('error_payment'), $this->url->link('information/contact', '', true));
 					}
 				
 					$authenticationValue = $threeDSecureData->authenticationValue; 
@@ -733,7 +733,7 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 							$this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $setting['order_status']['success_unsettled']['id'], $responseMessage);
 						}
 					} else {
-						$this->error['warning'] = $responseCode . ' ' . $responseMessage;
+						$this->error['warning'] = $responseCode . ' ' . $responseMessage . ' ' . sprintf($this->language->get('error_payment'), $this->url->link('information/contact', '', true));
 					}
 				} catch (GlobalPayments\Api\Entities\Exceptions\ApiException $exception) {
 					$responseCode = $exception->responseCode;
@@ -757,7 +757,7 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 				
 					$this->model_extension_payment_globalpayments->log($exception, $responseCode . ' ' . $responseMessage);
 					
-					$this->error['warning'] = $responseCode . ' ' . $responseMessage;
+					$this->error['warning'] = $responseCode . ' ' . $responseMessage . ' ' . sprintf($this->language->get('error_payment'), $this->url->link('information/contact', '', true));
 				}
 			}
 		}	
@@ -861,7 +861,7 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 				
 				$this->model_extension_payment_globalpayments->log($exception, $responseCode . ' ' . $responseMessage);
 				
-				$this->error['warning'] = $responseCode . ' ' . $responseMessage;
+				$this->error['warning'] = $responseCode . ' ' . $responseMessage . ' ' . sprintf($this->language->get('error_payment'), $this->url->link('information/contact', '', true));
 			}
 			
 			if (isset($threeDSecureData)) {
@@ -889,7 +889,7 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 					}
 			
 					if (isset($setting['secure_1_scenario'][$secure_scenario_code]) && isset($setting['checkout']['api']['secure_1_scenario'][$secure_scenario_code]) && !$setting['checkout']['api']['secure_1_scenario'][$secure_scenario_code]) {
-						$this->error['warning'] = $this->language->get($setting['secure_1_scenario'][$secure_scenario_code]['error']);
+						$this->error['warning'] = $this->language->get($setting['secure_1_scenario'][$secure_scenario_code]['error']) . ' ' . sprintf($this->language->get('error_payment'), $this->url->link('information/contact', '', true));
 					}
 					
 					if (!$this->error) {
@@ -908,7 +908,7 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 									$this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $setting['order_status']['success_unsettled']['id'], $responseMessage);
 								}
 							} else {
-								$this->error['warning'] = $responseCode . ' ' . $responseMessage;
+								$this->error['warning'] = $responseCode . ' ' . $responseMessage . ' ' . sprintf($this->language->get('error_payment'), $this->url->link('information/contact', '', true));
 							}
 						} catch (GlobalPayments\Api\Entities\Exceptions\ApiException $exception) {
 							$responseCode = $exception->responseCode;
@@ -932,7 +932,7 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 
 							$this->model_extension_payment_globalpayments->log($exception, $responseCode . ' ' . $responseMessage);
 				
-							$this->error['warning'] = $responseCode . ' ' . $responseMessage;
+							$this->error['warning'] = $responseCode . ' ' . $responseMessage . ' ' . sprintf($this->language->get('error_payment'), $this->url->link('information/contact', '', true));
 						}
 					}
 					
@@ -1005,7 +1005,7 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 				
 				$this->model_extension_payment_globalpayments->log($exception, $responseCode . ' ' . $responseMessage);
 				
-				$this->error['warning'] = $responseCode . ' ' . $responseMessage;
+				$this->error['warning'] = $responseCode . ' ' . $responseMessage . ' ' . sprintf($this->language->get('error_payment'), $this->url->link('information/contact', '', true));
 			}
 			
 			if (isset($threeDSecureData)) {
@@ -1070,7 +1070,7 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 			}
 			
 			if (isset($setting['secure_1_scenario'][$secure_scenario_code]) && isset($setting['checkout']['api']['secure_1_scenario'][$secure_scenario_code]) && !$setting['checkout']['api']['secure_1_scenario'][$secure_scenario_code]) {
-				$this->error['warning'] = $this->language->get($setting['secure_1_scenario'][$secure_scenario_code]['error']);
+				$this->error['warning'] = $this->language->get($setting['secure_1_scenario'][$secure_scenario_code]['error']) . ' ' . sprintf($this->language->get('error_payment'), $this->url->link('information/contact', '', true));
 			}
 			
 			if (!$this->error) {
@@ -1117,7 +1117,7 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 							$this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $setting['order_status']['success_unsettled']['id'], $responseMessage);
 						}
 					} else {
-						$this->error['warning'] = $responseCode . ' ' . $responseMessage;
+						$this->error['warning'] = $responseCode . ' ' . $responseMessage . ' ' . sprintf($this->language->get('error_payment'), $this->url->link('information/contact', '', true));
 					}
 				} catch (GlobalPayments\Api\Entities\Exceptions\ApiException $exception) {
 					$responseCode = $exception->responseCode;
@@ -1141,7 +1141,7 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 
 					$this->model_extension_payment_globalpayments->log($exception, $responseCode . ' ' . $responseMessage);
 				
-					$this->error['warning'] = $responseCode . ' ' . $responseMessage;
+					$this->error['warning'] = $responseCode . ' ' . $responseMessage . ' ' . sprintf($this->language->get('error_payment'), $this->url->link('information/contact', '', true));
 				}
 			}
 		}
