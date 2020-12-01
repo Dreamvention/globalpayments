@@ -32,6 +32,9 @@ class HostedPaymentConfig
 
     /** @var String */
     public $responseUrl;
+	
+	 /** @var String */
+    public $statusUpdateUrl;
 
     /** @var Boolean */
     public $requestTransactionStabilityScore;
@@ -125,6 +128,16 @@ class HostedPaymentConfig
     public function setResponseUrl($responseUrl)
     {
         $this->responseUrl = $responseUrl;
+    }
+	
+	 public function getStatusUpdateUrl()
+    {
+        return $statusUpdateUrl;
+    }
+
+    public function setStatusUpdateUrl($statusUpdateUrl)
+    {
+        $this->statusUpdateUrl = $statusUpdateUrl;
     }
 
     public function isRequestTransactionStabilityScore()

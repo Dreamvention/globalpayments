@@ -48,11 +48,16 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 			
 			$servicesConfig->hostedPaymentConfig = new GlobalPayments\Api\HostedPaymentConfig();
 			$servicesConfig->hostedPaymentConfig->version = GlobalPayments\Api\Entities\Enums\HppVersion::VERSION_2;
+			$servicesConfig->hostedPaymentConfig->responseUrl = $this->url->link('extension/payment/globalpayments/apmRedirect', '', true);
+			$servicesConfig->hostedPaymentConfig->statusUpdateUrl = $this->url->link('extension/payment/globalpayments/apmUpdateOrderStatus', '', true);
 			
 			$hostedService = new GlobalPayments\Api\Services\HostedService($servicesConfig);
 						
 			$hostedPaymentData = new GlobalPayments\Api\Entities\HostedPaymentData();
 				
+			$hostedPaymentData->paymentMethods = 'cards|paypal|testpay|sepapm|sofort';
+			$hostedPaymentData->customerFirstName = $order_info['firstname'];
+			$hostedPaymentData->customerLastName = $order_info['lastname'];
 			$hostedPaymentData->customerEmail = $order_info['email'];	
 			$hostedPaymentData->addressesMatch = false;
 													
@@ -80,6 +85,7 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 					$telephone = preg_replace('/[^0-9]/', '', $order_info['telephone']);
 					$telephone = preg_replace('/^' . $setting['country'][$country_info['iso_code_3']]['phone_code'] . '/', '', $telephone);
 					
+					$hostedPaymentData->customerCountry = $country_info['iso_code_2'];
 					$hostedPaymentData->customerPhoneMobile = $setting['country'][$country_info['iso_code_3']]['phone_code'] . '|' . $telephone;
 				}
 			}
@@ -115,6 +121,11 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 				} else {
 					$data['hpp'] = $hostedService->charge($order_info['total'])->withCurrency($order_info['currency_code'])->withHostedPaymentData($hostedPaymentData)->withAddress($billingAddress, GlobalPayments\Api\Entities\Enums\AddressType::BILLING)->serialize();
 				}
+				
+				$response = json_decode($data['hpp'], true);
+				
+				$this->model_extension_payment_globalpayments->addOrder($this->session->data['order_id'], $response['ORDER_ID']);
+				
 			} catch (GlobalPayments\Api\Entities\Exceptions\ApiException $exception) {
 				$this->model_extension_payment_globalpayments->log($exception, $responseCode . ' ' . $responseMessage);
 				
@@ -225,20 +236,12 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 				$responseCode = $exception->responseCode;
 				$responseMessage = $exception->responseMessage;
 				
-				if ($responseCode == '101') {
+				if (($responseCode >= 100) && ($responseCode < 200)) {
 					$this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $setting['order_status']['decline']['id'], $responseMessage);
 				} 
 				
-				if ($responseCode == '102') {
-					$this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $setting['order_status']['decline_pending']['id'], $responseMessage);
-				} 
-				
-				if ($responseCode == '103') {
-					$this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $setting['order_status']['decline_stolen']['id'], $responseMessage);
-				} 
-				
-				if ($responseCode == '200') {
-					$this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $setting['order_status']['decline_bank']['id'], $responseMessage);
+				if ($responseCode >= 200) {
+					$this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $setting['order_status']['failed']['id'], $responseMessage);
 				} 
 				
 				$this->model_extension_payment_globalpayments->log($exception, $responseCode . ' ' . $responseMessage);
@@ -326,20 +329,12 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 				$responseCode = $exception->responseCode;
 				$responseMessage = $exception->responseMessage;
 				
-				if ($responseCode == '101') {
+				if (($responseCode >= 100) && ($responseCode < 200)) {
 					$this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $setting['order_status']['decline']['id'], $responseMessage);
 				} 
 				
-				if ($responseCode == '102') {
-					$this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $setting['order_status']['decline_pending']['id'], $responseMessage);
-				} 
-				
-				if ($responseCode == '103') {
-					$this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $setting['order_status']['decline_stolen']['id'], $responseMessage);
-				} 
-				
-				if ($responseCode == '200') {
-					$this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $setting['order_status']['decline_bank']['id'], $responseMessage);
+				if ($responseCode >= 200) {
+					$this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $setting['order_status']['failed']['id'], $responseMessage);
 				}
 
 				$this->model_extension_payment_globalpayments->log($exception, $responseCode . ' ' . $responseMessage);
@@ -739,20 +734,12 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 					$responseCode = $exception->responseCode;
 					$responseMessage = $exception->responseMessage;
 						
-					if ($responseCode == '101') {
+					if (($responseCode >= 100) && ($responseCode < 200)) {
 						$this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $setting['order_status']['decline']['id'], $responseMessage);
 					} 
 				
-					if ($responseCode == '102') {
-						$this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $setting['order_status']['decline_pending']['id'], $responseMessage);
-					} 
-				
-					if ($responseCode == '103') {
-						$this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $setting['order_status']['decline_stolen']['id'], $responseMessage);
-					} 
-				
-					if ($responseCode == '200') {
-						$this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $setting['order_status']['decline_bank']['id'], $responseMessage);
+					if ($responseCode >= 200) {
+						$this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $setting['order_status']['failed']['id'], $responseMessage);
 					}
 				
 					$this->model_extension_payment_globalpayments->log($exception, $responseCode . ' ' . $responseMessage);
@@ -914,20 +901,12 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 							$responseCode = $exception->responseCode;
 							$responseMessage = $exception->responseMessage;
 				
-							if ($responseCode == '101') {
+							if (($responseCode >= 100) && ($responseCode < 200)) {
 								$this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $setting['order_status']['decline']['id'], $responseMessage);
 							} 
 				
-							if ($responseCode == '102') {
-								$this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $setting['order_status']['decline_pending']['id'], $responseMessage);
-							} 
-				
-							if ($responseCode == '103') {
-								$this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $setting['order_status']['decline_stolen']['id'], $responseMessage);
-							} 
-				
-							if ($responseCode == '200') {
-								$this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $setting['order_status']['decline_bank']['id'], $responseMessage);
+							if ($responseCode >= 200) {
+								$this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $setting['order_status']['failed']['id'], $responseMessage);
 							}
 
 							$this->model_extension_payment_globalpayments->log($exception, $responseCode . ' ' . $responseMessage);
@@ -1123,20 +1102,12 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 					$responseCode = $exception->responseCode;
 					$responseMessage = $exception->responseMessage;
 				
-					if ($responseCode == '101') {
+					if (($responseCode >= 100) && ($responseCode < 200)) {
 						$this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $setting['order_status']['decline']['id'], $responseMessage);
 					} 
 				
-					if ($responseCode == '102') {
-						$this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $setting['order_status']['decline_pending']['id'], $responseMessage);
-					} 
-				
-					if ($responseCode == '103') {
-						$this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $setting['order_status']['decline_stolen']['id'], $responseMessage);
-					} 
-				
-					if ($responseCode == '200') {
-						$this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $setting['order_status']['decline_bank']['id'], $responseMessage);
+					if ($responseCode >= 200) {
+						$this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $setting['order_status']['failed']['id'], $responseMessage);
 					}
 
 					$this->model_extension_payment_globalpayments->log($exception, $responseCode . ' ' . $responseMessage);
@@ -1154,6 +1125,269 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 				
 		$this->response->addHeader('Content-Type: application/json');
 		$this->response->setOutput(json_encode($data));
+	}
+	
+	public function apmRedirect() {		
+		$this->load->language('extension/payment/globalpayments');
+						
+		$this->load->model('extension/payment/globalpayments');
+		
+		if (isset($this->request->request['ORDER_ID']) && isset($this->request->request['RESULT']) && isset($this->request->request['MESSAGE'])) {		
+			$responseCode = $this->request->request['RESULT'];
+			$responseMessage = $this->request->request['MESSAGE'];
+			$orderId = $this->request->request['ORDER_ID'];
+			
+			sleep(3);
+						
+			$order = $this->model_extension_payment_globalpayments->getOrderByCode($orderId);
+			
+			$this->load->model('checkout/order');
+			
+			$order_info = $this->model_checkout_order->getOrder($order['order_id']);
+			
+			// Setting
+			$_config = new Config();
+			$_config->load('globalpayments');
+			
+			$config_setting = $_config->get('globalpayments_setting');
+		
+			$setting = array_replace_recursive((array)$config_setting, (array)$this->config->get('globalpayments_setting'));
+			
+			$settlement_method = $this->config->get('globalpayments_settlement_method');
+
+			if ($order_info['order_status_id']) {
+				if ((($settlement_method == 'auto') && ($order_info['order_status_id'] == $setting['order_status']['success_settled']['id'])) || (($settlement_method != 'auto') && ($order_info['order_status_id'] == $setting['order_status']['success_unsettled']['id']))) {
+					$data['redirect_url'] = $this->url->link('checkout/success', '', true);
+				} else {
+					$data['redirect_url'] = $this->url->link('extension/payment/globalpayments/apmFailurePage', '', true);
+				}
+			} else {				
+				$data['redirect_url'] = $this->url->link('extension/payment/globalpayments/apmInterimPage', '', true);
+			}
+			
+			$this->response->setOutput($this->load->view('extension/payment/globalpayments/apm_redirect', $data));
+		}
+	}
+			
+	public function apmUpdateOrderStatus() {
+		$this->load->language('extension/payment/globalpayments');
+						
+		$this->load->model('extension/payment/globalpayments');
+		
+		if (isset($this->request->request['orderid']) && isset($this->request->request['result']) && isset($this->request->request['message'])) {		
+			$responseCode = $this->request->request['result'];
+			$responseMessage = $this->request->request['message'];
+			$orderId = $this->request->request['orderid'];
+				
+			$order = $this->model_extension_payment_globalpayments->getOrderByCode($orderId);
+					
+			// Setting
+			$_config = new Config();
+			$_config->load('globalpayments');
+			
+			$config_setting = $_config->get('globalpayments_setting');
+		
+			$setting = array_replace_recursive((array)$config_setting, (array)$this->config->get('globalpayments_setting'));
+			
+			$settlement_method = $this->config->get('globalpayments_settlement_method');
+			
+			$this->load->model('checkout/order');
+							
+			if ($responseCode == '00') {
+				$this->model_checkout_order->addOrderHistory($order['order_id'], $this->config->get('config_order_status_id'));
+				
+				if ($settlement_method == 'auto') {
+					$this->model_checkout_order->addOrderHistory($order['order_id'], $setting['order_status']['success_settled']['id'], $responseMessage);
+				} else {
+					$this->model_checkout_order->addOrderHistory($order['order_id'], $setting['order_status']['success_unsettled']['id'], $responseMessage);
+				}
+			} else {				
+				if (($responseCode >= 100) && ($responseCode < 200)) {
+					$this->model_checkout_order->addOrderHistory($order['order_id'], $setting['order_status']['decline']['id'], $responseMessage);
+				} 
+				
+				if ($responseCode >= 200) {
+					$this->model_checkout_order->addOrderHistory($order['order_id'], $setting['order_status']['failed']['id'], $responseMessage);
+				}
+				
+				$this->model_extension_payment_globalpayments->log($this->request->request, $responseCode . ' ' . $responseMessage);
+			}
+		}
+	}
+			
+	public function apmInterimPage() {
+		$this->load->language('extension/payment/globalpayments');
+
+		$this->document->setTitle($this->language->get('text_apm_interim_page_title'));
+
+		$data['breadcrumbs'] = array();
+
+		$data['breadcrumbs'][] = array(
+			'text' => $this->language->get('text_home'),
+			'href' => $this->url->link('common/home', '', true)
+		);
+		
+		$data['breadcrumbs'][] = array(
+			'text' => $this->language->get('text_cart'),
+			'href' => $this->url->link('checkout/cart', '', true)
+		);
+
+		$data['breadcrumbs'][] = array(
+			'text' => $this->language->get('text_title'),
+			'href' => $this->url->link('extension/payment/globalpayments/apmInterimPage', '', true)
+		);
+		
+		$data['text_title'] = $this->language->get('text_apm_interim_page_title');
+		$data['text_message'] = $this->language->get('text_apm_interim_page_message');
+		
+		$data['apm_check_order_status_url'] = $this->url->link('extension/payment/globalpayments/apmCheckOrderStatus', '', true);
+		
+		$data['column_left'] = $this->load->controller('common/column_left');
+		$data['column_right'] = $this->load->controller('common/column_right');
+		$data['content_top'] = $this->load->controller('common/content_top');
+		$data['content_bottom'] = $this->load->controller('common/content_bottom');
+		$data['footer'] = $this->load->controller('common/footer');
+		$data['header'] = $this->load->controller('common/header');
+
+		$this->response->setOutput($this->load->view('extension/payment/globalpayments/apm_interim_page', $data));
+	}
+	
+	public function apmCheckOrderStatus() {		
+		if (isset($this->session->data['order_id'])) {			
+			$this->load->model('checkout/order');
+			
+			$order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
+			
+			// Setting
+			$_config = new Config();
+			$_config->load('globalpayments');
+			
+			$config_setting = $_config->get('globalpayments_setting');
+		
+			$setting = array_replace_recursive((array)$config_setting, (array)$this->config->get('globalpayments_setting'));
+			
+			$settlement_method = $this->config->get('globalpayments_settlement_method');
+			
+			if ($order_info['order_status_id']) {
+				if ((($settlement_method == 'auto') && ($order_info['order_status_id'] == $setting['order_status']['success_settled']['id'])) || (($settlement_method != 'auto') && ($order_info['order_status_id'] == $setting['order_status']['success_unsettled']['id']))) {
+					$this->response->redirect($this->url->link('checkout/success', '', true));
+				} else {
+					$this->response->redirect($this->url->link('extension/payment/globalpayments/apmFailurePage', '', true));
+				}
+			} else {				
+				$this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $this->config->get('config_order_status_id'));
+				
+				$this->response->redirect($this->url->link('extension/payment/globalpayments/apmFinalPage', '', true));
+			}
+		}
+	}
+	
+	public function apmFailurePage() {
+		$this->load->language('extension/payment/globalpayments');
+
+		$this->document->setTitle($this->language->get('text_apm_failure_page_title'));
+		
+		if (isset($this->session->data['order_id'])) {
+			$this->cart->clear();
+
+			unset($this->session->data['shipping_method']);
+			unset($this->session->data['shipping_methods']);
+			unset($this->session->data['payment_method']);
+			unset($this->session->data['payment_methods']);
+			unset($this->session->data['guest']);
+			unset($this->session->data['comment']);
+			unset($this->session->data['order_id']);
+			unset($this->session->data['coupon']);
+			unset($this->session->data['reward']);
+			unset($this->session->data['voucher']);
+			unset($this->session->data['vouchers']);
+			unset($this->session->data['totals']);
+		}
+
+		$data['breadcrumbs'] = array();
+
+		$data['breadcrumbs'][] = array(
+			'text' => $this->language->get('text_home'),
+			'href' => $this->url->link('common/home', '', true)
+		);
+		
+		$data['breadcrumbs'][] = array(
+			'text' => $this->language->get('text_cart'),
+			'href' => $this->url->link('checkout/cart', '', true)
+		);
+
+		$data['breadcrumbs'][] = array(
+			'text' => $this->language->get('text_title'),
+			'href' => $this->url->link('extension/payment/globalpayments/apmFailurePage', '', true)
+		);
+		
+		$data['text_title'] = $this->language->get('text_apm_failure_page_title');
+		$data['text_message'] = sprintf($this->language->get('text_apm_failure_page_message'), $this->url->link('information/contact', '', true));
+		
+		$data['continue'] = $this->url->link('common/home');
+				
+		$data['column_left'] = $this->load->controller('common/column_left');
+		$data['column_right'] = $this->load->controller('common/column_right');
+		$data['content_top'] = $this->load->controller('common/content_top');
+		$data['content_bottom'] = $this->load->controller('common/content_bottom');
+		$data['footer'] = $this->load->controller('common/footer');
+		$data['header'] = $this->load->controller('common/header');
+
+		$this->response->setOutput($this->load->view('extension/payment/globalpayments/apm_failure_page', $data));
+	}
+	
+	public function apmFinalPage() {
+		$this->load->language('extension/payment/globalpayments');
+
+		$this->document->setTitle($this->language->get('text_apm_final_page_title'));
+		
+		if (isset($this->session->data['order_id'])) {
+			$this->cart->clear();
+
+			unset($this->session->data['shipping_method']);
+			unset($this->session->data['shipping_methods']);
+			unset($this->session->data['payment_method']);
+			unset($this->session->data['payment_methods']);
+			unset($this->session->data['guest']);
+			unset($this->session->data['comment']);
+			unset($this->session->data['order_id']);
+			unset($this->session->data['coupon']);
+			unset($this->session->data['reward']);
+			unset($this->session->data['voucher']);
+			unset($this->session->data['vouchers']);
+			unset($this->session->data['totals']);
+		}
+
+		$data['breadcrumbs'] = array();
+
+		$data['breadcrumbs'][] = array(
+			'text' => $this->language->get('text_home'),
+			'href' => $this->url->link('common/home', '', true)
+		);
+		
+		$data['breadcrumbs'][] = array(
+			'text' => $this->language->get('text_cart'),
+			'href' => $this->url->link('checkout/cart', '', true)
+		);
+
+		$data['breadcrumbs'][] = array(
+			'text' => $this->language->get('text_title'),
+			'href' => $this->url->link('extension/payment/globalpayments/apmFinalPage', '', true)
+		);
+
+		$data['text_title'] = $this->language->get('text_apm_final_page_title');
+		$data['text_message'] = $this->language->get('text_apm_final_page_message');
+		
+		$data['continue'] = $this->url->link('common/home');
+		
+		$data['column_left'] = $this->load->controller('common/column_left');
+		$data['column_right'] = $this->load->controller('common/column_right');
+		$data['content_top'] = $this->load->controller('common/content_top');
+		$data['content_bottom'] = $this->load->controller('common/content_bottom');
+		$data['footer'] = $this->load->controller('common/footer');
+		$data['header'] = $this->load->controller('common/header');
+
+		$this->response->setOutput($this->load->view('extension/payment/globalpayments/apm_final_page', $data));
 	}
 		
 	private function validate() {

@@ -34,6 +34,7 @@
 		  
 					<div class="tab-content">
 						<div class="tab-pane active" id="tab_general">
+							<div class="alert alert-info"><i class="fa fa-info-circle"></i> <?php echo $text_support; ?></div>
 							<div class="form-group required">
 								<label class="col-sm-2 control-label" for="input_merchant_id"><?php echo $entry_merchant_id; ?></label>
 								<div class="col-sm-10">
