@@ -24,6 +24,27 @@ class HostedPaymentData
     public $challengeRequest;
 
     /**
+     * The customer's firstname.
+     *
+     * @var string
+     */
+    public $customerFirstName;
+	
+	/**
+     * The customer's lastname.
+     *
+     * @var string
+     */
+    public $customerLastName;
+	
+	/**
+     * The customer's country.
+     *
+     * @var string
+     */
+    public $customerCountry;
+	
+	/**
      * The customer's email address.
      *
      * @var string
@@ -64,6 +85,13 @@ class HostedPaymentData
      * @var boolean
      */
     public $offerToSaveCard;
+	
+	/**
+     * The customer's payment methods.
+     *
+     * @var string
+     */
+    public $paymentMethods;
 
     /**
      * The identifier for the customer's desired payment method.

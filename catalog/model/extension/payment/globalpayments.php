@@ -29,6 +29,26 @@ class ModelExtensionPaymentGlobalPayments extends Model {
 		return $method_data;
 	}
 	
+	public function addOrder($order_id, $order_code) {
+		$this->db->query("UPDATE " . DB_PREFIX . "globalpayments_order SET order_code = '" . $this->db->escape($order_code) . "' WHERE order_id = '" . (int)$order_id . "'");
+		
+		if (!$this->db->countAffected()) {
+			$this->db->query("INSERT INTO " . DB_PREFIX . "globalpayments_order SET order_id = '" . (int)$order_id . "', order_code = '" . $this->db->escape($order_code) . "'");
+		}
+	}
+	
+	public function getOrder($order_id) {
+		$this->db->query("SELECT * FROM " . DB_PREFIX . "globalpayments_order WHERE order_id = '" . (int)$order_id . "'");
+		
+		return $query->row;
+	}
+	
+	public function getOrderByCode($order_code) {
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "globalpayments_order WHERE order_code = '" . $this->db->escape($order_code) . "'");
+		
+		return $query->row;
+	}
+	
 	public function log($data, $title = null) {
 		if ($this->config->get('payment_globalpayments_debug')) {
 			$log = new Log('globalpayments.log');

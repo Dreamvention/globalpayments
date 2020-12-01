@@ -17,6 +17,10 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 			$this->response->redirect($this->url->link('marketplace/extension', 'user_token=' . $this->session->data['user_token'] . '&type=payment', true));
 		}
 		
+		$this->load->model('extension/payment/globalpayments');
+		
+		$this->model_extension_payment_globalpayments->refreshOrders();
+				
 		if (isset($this->error['warning'])) {
 			$data['error_warning'] = $this->error['warning'];
 		} else {
@@ -153,23 +157,35 @@ class ControllerExtensionPaymentGlobalPayments extends Controller {
 
 		$this->response->setOutput($this->load->view('extension/payment/globalpayments', $data));
 	}
+	
+	public function install() {
+		$this->load->model('extension/payment/globalpayments');
+		
+		$this->model_extension_payment_globalpayments->installExtension();
+	}
+	
+	public function uninstall() {
+		$this->load->model('extension/payment/globalpayments');
+		
+		$this->model_extension_payment_globalpayments->uninstallExtension();
+	}
 					
 	protected function validate() {
 		if (!$this->user->hasPermission('modify', 'extension/payment/globalpayments')) {
 			$this->error['warning'] = $this->language->get('error_permission');
 		}
 		
-		if (!isset($this->request->post['payment_globalpayments_merchant_id']) || strlen($this->request->post['payment_globalpayments_merchant_id']) <= 3 || strlen($this->request->post['payment_globalpayments_merchant_id']) > 50) {
+		if (!isset($this->request->post['payment_globalpayments_merchant_id']) || strlen($this->request->post['payment_globalpayments_merchant_id']) <= 1 || strlen($this->request->post['payment_globalpayments_merchant_id']) > 50) {
 			$this->error['warning'] = $this->language->get('error_warning');
 			$this->error['error_merchant_id'] = $this->language->get('error_merchant_id');
 		}
 		
-		if (!isset($this->request->post['payment_globalpayments_account_id']) || strlen($this->request->post['payment_globalpayments_account_id']) <= 3 || strlen($this->request->post['payment_globalpayments_account_id']) > 50) {
+		if (!isset($this->request->post['payment_globalpayments_account_id']) || strlen($this->request->post['payment_globalpayments_account_id']) <= 1 || strlen($this->request->post['payment_globalpayments_account_id']) > 50) {
 			$this->error['warning'] = $this->language->get('error_warning');
 			$this->error['error_account_id'] = $this->language->get('error_account_id');
 		}
 
-		if (!isset($this->request->post['payment_globalpayments_secret']) || strlen($this->request->post['payment_globalpayments_secret']) <= 3 || strlen($this->request->post['payment_globalpayments_secret']) > 50) {
+		if (!isset($this->request->post['payment_globalpayments_secret']) || strlen($this->request->post['payment_globalpayments_secret']) <= 1 || strlen($this->request->post['payment_globalpayments_secret']) > 50) {
 			$this->error['warning'] = $this->language->get('error_warning');
 			$this->error['error_secret'] = $this->language->get('error_secret');
 		}

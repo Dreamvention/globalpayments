@@ -605,14 +605,19 @@ class RealexConnector extends XmlGateway implements IPaymentGateway, IRecurringS
         $this->setSerializeData('VAR_REF', $builder->clientTransactionId);
         $this->setSerializeData('HPP_LANG', $this->hostedPaymentConfig->language);
         $this->setSerializeData('MERCHANT_RESPONSE_URL', $this->hostedPaymentConfig->responseUrl);
+		$this->setSerializeData('HPP_TX_STATUS_URL', $this->hostedPaymentConfig->statusUpdateUrl);
         $this->setSerializeData('CARD_PAYMENT_BUTTON', $this->hostedPaymentConfig->paymentButtonText);
         if (!empty($builder->hostedPaymentData)) {
-            $this->setSerializeData('HPP_CUSTOMER_EMAIL', $builder->hostedPaymentData->customerEmail);
+            $this->setSerializeData('HPP_CUSTOMER_COUNTRY', $builder->hostedPaymentData->customerCountry);
+			$this->setSerializeData('HPP_CUSTOMER_FIRSTNAME', $builder->hostedPaymentData->customerFirstName);
+			$this->setSerializeData('HPP_CUSTOMER_LASTNAME', $builder->hostedPaymentData->customerLastName);
+			$this->setSerializeData('HPP_CUSTOMER_EMAIL', $builder->hostedPaymentData->customerEmail);
             $this->setSerializeData('HPP_CUSTOMER_PHONENUMBER_MOBILE', $builder->hostedPaymentData->customerPhoneMobile);
             $this->setSerializeData('HPP_CHALLENGE_REQUEST_INDICATOR', $builder->hostedPaymentData->challengeRequest);
             if (isset($builder->hostedPaymentData->addressesMatch)) {
                 $this->setSerializeData('HPP_ADDRESS_MATCH_INDICATOR', $builder->hostedPaymentData->addressesMatch ? 'TRUE' : 'FALSE');
             }
+			$this->setSerializeData('PM_METHODS', $builder->hostedPaymentData->paymentMethods);
         }
         if (isset($this->hostedPaymentConfig->cardStorageEnabled)) {
             $this->setSerializeData('CARD_STORAGE_ENABLE', $this->hostedPaymentConfig->cardStorageEnabled ? '1' : '0');
