@@ -4,12 +4,13 @@ $_['heading_title']		 									= 'Global Payments';
 
 // Text
 $_['text_globalpayments']		 							= '<a target="_BLANK" href="https://www.globalpaymentsinc.com/en-us"><img src="view/image/payment/globalpayments.png" alt="Global Payments" title="Global Payments" style="border: 1px solid #EEEEEE;" /></a>';
-$_['text_extensions']     									= 'Extensions';
+$_['text_payments']					 						= 'Payments';
 $_['text_edit']          									= 'Edit Global Payments';
 $_['text_general']				 	 						= 'General';
 $_['text_order_status']				 						= 'Order Status';
 $_['text_checkout_hpp']										= 'HPP';
 $_['text_checkout_api']										= 'API';
+$_['text_support']			 	 							= 'If you have an existing Global Payments account you can contact our support team at ecomsupport@globalpay.com to recieve your integration details. If you would like to request a test account, this can be requested through our <a href="https://developer.globalpay.com/" target="_blank" class="alert-link">Developer Portal</a> by signing in and selecting the my apps section.';
 $_['text_production']			 	 						= 'Production / Live';
 $_['text_sandbox']			 								= 'Sandbox';
 $_['text_delay']			 	 							= 'Delay';
@@ -18,9 +19,7 @@ $_['text_multi']			 								= 'Multi';
 $_['text_success_settled_status']							= 'Success - settled';
 $_['text_success_unsettled_status']							= 'Success - not settled';
 $_['text_decline_status']									= 'Decline';
-$_['text_decline_pending_status']							= 'Decline - offline auth';
-$_['text_decline_stolen_status']							= 'Decline - lost or stolen card';
-$_['text_decline_bank_status']								= 'Decline - bank error';
+$_['text_failed_status']									= 'Failed';
 $_['text_embedded']											= 'Embedded';
 $_['text_lightbox']											= 'Lightbox';
 $_['text_align_left']										= 'Align Left';

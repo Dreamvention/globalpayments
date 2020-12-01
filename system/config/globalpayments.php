@@ -22,32 +22,22 @@ $_['globalpayments_setting'] = array(
 		'success_settled' => array(
 			'code' => 'success_settled',
 			'name' => 'text_success_settled_status',
-			'id' => 1
+			'id' => 5
 		),
 		'success_unsettled' => array(
 			'code' => 'success_unsettled',
 			'name' => 'text_success_unsettled_status',
-			'id' => 1
+			'id' => 5
 		),
 		'decline' => array(
 			'code' => 'decline',
 			'name' => 'text_decline_status',
 			'id' => 7
 		),
-		'decline_pending' => array(
-			'code' => 'decline_pending',
-			'name' => 'text_decline_pending_status',
-			'id' => 7
-		),
-		'decline_stolen' => array(
-			'code' => 'decline_stolen',
-			'name' => 'text_decline_stolen_status',
-			'id' => 7
-		),
-		'decline_bank' => array(
-			'code' => 'decline_bank',
-			'name' => 'text_decline_bank_status',
-			'id' => 7
+		'failed' => array(
+			'code' => 'failed',
+			'name' => 'text_failed_status',
+			'id' => 10
 		)
 	),
 	'checkout' => array(

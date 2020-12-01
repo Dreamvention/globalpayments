@@ -17,6 +17,10 @@ class ControllerPaymentGlobalPayments extends Controller {
 			$this->response->redirect($this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL'));
 		}
 		
+		$this->load->model('payment/globalpayments');
+		
+		$this->model_payment_globalpayments->refreshOrders();
+		
 		if (isset($this->error['warning'])) {
 			$data['error_warning'] = $this->error['warning'];
 		} else {
@@ -53,6 +57,7 @@ class ControllerPaymentGlobalPayments extends Controller {
 		$data['text_order_status'] = $this->language->get('text_order_status');
 		$data['text_checkout_hpp'] = $this->language->get('text_checkout_hpp');
 		$data['text_checkout_api'] = $this->language->get('text_checkout_api');
+		$data['text_support'] = $this->language->get('text_support');
 		$data['text_production'] = $this->language->get('text_production');
 		$data['text_sandbox'] = $this->language->get('text_sandbox');
 		$data['text_delay'] = $this->language->get('text_delay');
@@ -61,9 +66,7 @@ class ControllerPaymentGlobalPayments extends Controller {
 		$data['text_success_settled_status'] = $this->language->get('text_success_settled_status');
 		$data['text_success_unsettled_status'] = $this->language->get('text_success_unsettled_status');
 		$data['text_decline_status'] = $this->language->get('text_decline_status');
-		$data['text_decline_pending_status'] = $this->language->get('text_decline_pending_status');
-		$data['text_decline_stolen_status'] = $this->language->get('text_decline_stolen_status');
-		$data['text_decline_bank_status'] = $this->language->get('text_decline_bank_status');
+		$data['text_failed_status'] = $this->language->get('text_failed_status');
 		$data['text_embedded'] = $this->language->get('text_embedded');
 		$data['text_lightbox'] = $this->language->get('text_lightbox');
 		$data['text_align_left'] = $this->language->get('text_align_left');
@@ -233,23 +236,35 @@ class ControllerPaymentGlobalPayments extends Controller {
 
 		$this->response->setOutput($this->load->view('payment/globalpayments', $data));
 	}
+	
+	public function install() {
+		$this->load->model('payment/globalpayments');
+		
+		$this->model_payment_globalpayments->installExtension();
+	}
+	
+	public function uninstall() {
+		$this->load->model('payment/globalpayments');
+		
+		$this->model_payment_globalpayments->uninstallExtension();
+	}
 					
 	protected function validate() {
 		if (!$this->user->hasPermission('modify', 'payment/globalpayments')) {
 			$this->error['warning'] = $this->language->get('error_permission');
 		}
 		
-		if (!isset($this->request->post['globalpayments_merchant_id']) || strlen($this->request->post['globalpayments_merchant_id']) <= 3 || strlen($this->request->post['globalpayments_merchant_id']) > 50) {
+		if (!isset($this->request->post['globalpayments_merchant_id']) || strlen($this->request->post['globalpayments_merchant_id']) <= 1 || strlen($this->request->post['globalpayments_merchant_id']) > 50) {
 			$this->error['warning'] = $this->language->get('error_warning');
 			$this->error['error_merchant_id'] = $this->language->get('error_merchant_id');
 		}
 		
-		if (!isset($this->request->post['globalpayments_account_id']) || strlen($this->request->post['globalpayments_account_id']) <= 3 || strlen($this->request->post['globalpayments_account_id']) > 50) {
+		if (!isset($this->request->post['globalpayments_account_id']) || strlen($this->request->post['globalpayments_account_id']) <= 1 || strlen($this->request->post['globalpayments_account_id']) > 50) {
 			$this->error['warning'] = $this->language->get('error_warning');
 			$this->error['error_account_id'] = $this->language->get('error_account_id');
 		}
 
-		if (!isset($this->request->post['globalpayments_secret']) || strlen($this->request->post['globalpayments_secret']) <= 3 || strlen($this->request->post['globalpayments_secret']) > 50) {
+		if (!isset($this->request->post['globalpayments_secret']) || strlen($this->request->post['globalpayments_secret']) <= 1 || strlen($this->request->post['globalpayments_secret']) > 50) {
 			$this->error['warning'] = $this->language->get('error_warning');
 			$this->error['error_secret'] = $this->language->get('error_secret');
 		}
